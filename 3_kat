@@ -6,13 +6,13 @@
 if (( $# !=2 ))
 then 
   printf "\nUsage: \n";
-  printf "ARG1 - Directory to Pull from\n";
+  printf "ARG1 - File to Pull from\n";
   printf "ARG2 - Directory to Dump\n";
   exit 1
 fi
 #
 # ARGUMENTS
-target=${1%/}
+list=${1%/}
 dump=${2%/}
 #
 # LOCATIONS
