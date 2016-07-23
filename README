@@ -19,7 +19,16 @@ Keys
 
 Pool
      - Contains Fk-Tons of files sorted as its 1M Block Sha256 sum
--------------------------------------------------------------------
+
+# LOCATIONS
+# $target/ = files will be shredded into 1M blocks
+# $dump/ = working directory
+# $dump/pool/ = final location 
+# $dump/limbo/ = temporary location for split
+# $dump/keys/ = ordered file pieces
+# $dump/output/ = recompiled files
+-----------------------------------------------------------------------
+
 The Anarchist's Archive
  ' let us perserve all insight
  ' till the last man walk
