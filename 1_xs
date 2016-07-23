@@ -8,4 +8,44 @@
 # USAGE
 if (( $# != 2 ))
 then
-  printf
+  printf "\nUsage: \n";
+  printf "ARG1 - Directory to Extract\n";
+  printf "ARG2 - Directory to Dump\n";
+  exit 1;
+fi
+#
+# VARIABLES
+target=${1%/}
+dump=${2%/}
+#
+# LOCATIONS
+# $target = where to extract
+# $dump = where to store
+# $dump/meta/ = where to store file metadata
+# $dump/xs_log_sha = log for sha errors
+# $dump/xs_log_cp = log for copy errors
+#
+# CHECK DIR
+[[ -d "$target" ]] || { echo >&2 "ERROR: you didn't specify a valid EXTRACT directory"; exit 1; }
+[[ -d "$dump" ]] || { echo >&2 "ERROR: you didn't specify a valid DUMP directory"; exit 1; }
+#
+# BEGIN
+shopt -s globstar;
+for file in "$target"/**/*
+do
+  [[ -d "$file" ]] && continue # skipping directories
+# EXTRACT METADATA
+  dir=${file%/*}
+  path=${dir//[ \/]/_}
+  base=${file##*/}
+  name=${base//[ \/]/.}
+# SHA FILE
+  sha="$( sha256 "$file" |  awk '$0=$NF' )"
+  regex='^[a-z0-9]{64}'
+  [[ "$sha" =~ $regex ]] || echo "ERROR: couldn't sha256 '$file'" | tee -a "$dump"/xs_log_sha >&2
+# EXTRACT FILE
+  cp "$file" "$dump/$sha" || echo "ERROR: couldn't cp '$file'" | tee -a "$dump"/xs_log_mv >&2
+  touch $sha "$dump"/meta/
+  printf "%s\n" "$name" >> "$dump"/meta/$sha
+  printf "%s" "$path" >> "$dump"/meta/$sha
+done
