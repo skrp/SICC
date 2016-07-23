@@ -1,4 +1,36 @@
 #!/usr/local/bin/bash
 #
 # USAGE
-if ((
+if (( $# !=2 ))
+then 
+  printf "\nUsage: \n";
+  printf "ARG1 - Directory to Split\n";
+  printf "ARG2 - Directory to Dump\n";
+  exit 1
+fi
+#
+# ARGUMENTS
+target=${1%/}
+dump=${2%/}
+#
+# LOCATIONS
+# $target/ = files will be shredded into 1M blocks
+# $dump/ = working directory
+# $dump/pool/ = final location 
+# $dump/limbo/ = temporary location for split
+# $dump/keys/ = ordered file pieces
+# BEGIN
+shopt -s globstar;
+for file in "$target"/**/*
+do
+  wsha=$( sha256 "$file" | awk '{ print $NF }')
+  split -a 6 -d -b 1M "$file" "$dump"/limbo/;
+  touch "$dump"/keys/"$wsha";
+  list=$( ls "$dump"/limbo/ )
+  for i in $list
+    do
+      psha=$( sha256 "$dump"/limbo/"$i" | awk '{ print $NF }' )
+      printf "%s\n" "$psha" >> "$dump"/keys/"$wsha";
+      mv "$dump"/limbo/"$i" "$dump"/pool/"$psha";
+    done
+done
