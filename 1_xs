@@ -1,0 +1,11 @@
+#!/usr/local/bin/bash
+#
+######################
+# Xtract & Standardize
+# Files Recursively
+###################
+#
+# USAGE
+if (( $# != 2 ))
+then
+  printf
