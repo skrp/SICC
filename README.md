@@ -1,8 +1,6 @@
 ###########################
 # SICC
 # Storage In Complete Chaos
-# 
-# Cause Govt Hates Freedom
 ###########################
 
 MKRX	
