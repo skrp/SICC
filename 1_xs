@@ -45,7 +45,7 @@ do
   [[ "$sha" =~ $regex ]] || echo "ERROR: couldn't sha256 '$file'" | tee -a "$dump"/xs_log_sha >&2
 # EXTRACT FILE
   cp "$file" "$dump/$sha" || echo "ERROR: couldn't cp '$file'" | tee -a "$dump"/xs_log_mv >&2
-  touch $sha "$dump"/meta/
-  printf "%s\n" "$name" >> "$dump"/meta/$sha
-  printf "%s" "$path" >> "$dump"/meta/$sha
+  touch "$sha" "$dump"/meta/;
+  printf "%s\n" "$name" >> "$dump"/meta/"$sha";
+  printf "%s" "$path" >> "$dump"/meta/"$sha";
 done
