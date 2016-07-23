@@ -14,7 +14,7 @@ then
   exit 1;
 fi
 #
-# VARIABLES
+# ARGUMENTS
 target=${1%/}
 dump=${2%/}
 #
