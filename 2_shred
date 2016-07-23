@@ -19,9 +19,9 @@ dump=${2%/}
 # $dump/pool/ = final location 
 # $dump/limbo/ = temporary location for split
 # $dump/keys/ = ordered file pieces
+# 
 # BEGIN
-shopt -s globstar;
-for file in "$target"/**/*
+for file in $target
 do
   wsha=$( sha256 "$file" | awk '{ print $NF }')
   split -a 6 -d -b 1M "$file" "$dump"/limbo/;
