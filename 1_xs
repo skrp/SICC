@@ -40,12 +40,12 @@ do
   base=${file##*/}
   name=${base//[ \/]/.}
 # SHA FILE
-  sha="$( sha256 "$file" |  awk '$0=$NF' )"
+  sha="$( sha256 "$file" |  awk '{ print $NF }' )"
   regex='^[a-z0-9]{64}'
   [[ "$sha" =~ $regex ]] || echo "ERROR: couldn't sha256 '$file'" | tee -a "$dump"/xs_log_sha >&2
 # EXTRACT FILE
   cp "$file" "$dump/$sha" || echo "ERROR: couldn't cp '$file'" | tee -a "$dump"/xs_log_mv >&2
-  touch "$sha" "$dump"/meta/;
+  touch "$dump"/meta/"$sha";
   printf "%s\n" "$name" >> "$dump"/meta/"$sha";
   printf "%s" "$path" >> "$dump"/meta/"$sha";
 done
