@@ -1,5 +1,9 @@
 #!/usr/local/bin/bash
 #
+###################
+# Shred Into Blocks
+###################
+#
 # USAGE
 if (( $# !=2 ))
 then 
