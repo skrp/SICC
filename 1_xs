@@ -35,17 +35,15 @@ for file in "$target"/**/*
 do
   [[ -d "$file" ]] && continue # skipping directories
 # EXTRACT METADATA
+  d=$( date +%d%m%y_%H%M )
   dir=${file%/*}
   path=${dir//[ \/]/_}
   base=${file##*/}
   name=${base//[ \/]/.}
 # SHA FILE
   sha="$( sha256 "$file" |  awk '{ print $NF }' )"
-  regex='^[a-z0-9]{64}'
-  [[ "$sha" =~ $regex ]] || echo "ERROR: couldn't sha256 '$file'" | tee -a "$dump"/xs_log_sha >&2
 # EXTRACT FILE
-  cp "$file" "$dump/$sha" || echo "ERROR: couldn't cp '$file'" | tee -a "$dump"/xs_log_mv >&2
-  touch "$dump"/meta/"$sha";
-  printf "%s\n" "$name" >> "$dump"/meta/"$sha";
-  printf "%s" "$path" >> "$dump"/meta/"$sha";
+  cp "$file" "$dump"/pool/"$sha" || echo "ERROR: couldn't cp '$file'" | tee -a "$dump"/xs_log_cp.$d >&2;
+  printf "%s\n" "$name" >> "$dump"/meta/m"$sha";
+  printf "%s\n" "$path" >> "$dump"/meta/m"$sha";
 done
