@@ -28,7 +28,7 @@ dump=${2%/}
 # BEGIN
 for line in $list
 do
-    cat "$dump"/pool/"$line" >> "$dump"/output/completed;
-    wsha=$( sha256 completed | awk '{ print $NF }' )
-    mv "$dump"/output/completed "$dump"/output/"$wsha";
+    cat "$dump"/pool/"$line" >> "$dump"/limbo/completed;
+    wsha=$( sha256 "/$dump"/limbo/completed | awk '{ print $NF }' )
+    mv "$dump"/limbo/completed "$dump"/output/"$wsha";
 done
