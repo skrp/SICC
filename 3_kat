@@ -14,7 +14,7 @@ then
 fi
 #
 # ARGUMENTS
-list=${1%/}
+key=${1%/}
 dump=${2%/}
 #
 # LOCATIONS
@@ -26,9 +26,11 @@ dump=${2%/}
 # $dump/output/ = recompiled files
 #
 # BEGIN
+list=$( cat $key );
+
 for line in $list
 do
     cat "$dump"/pool/"$line" >> "$dump"/limbo/completed;
-    wsha=$( sha256 "/$dump"/limbo/completed | awk '{ print $NF }' )
-    mv "$dump"/limbo/completed "$dump"/output/"$wsha";
 done
+wsha=$( sha256 /"$dump"/limbo/completed | awk '{ print $NF }' )
+mv "$dump"/limbo/completed "$dump"/output/"$wsha";
