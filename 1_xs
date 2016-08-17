@@ -22,8 +22,7 @@ dump=${2%/}
 # $target = where to extract
 # $dump = where to store
 # $dump/meta/ = where to store file metadata
-# $dump/xs_log_sha = log for sha errors
-# $dump/xs_log_cp = log for copy errors
+# $dump/xs_log_cp$d = log for copy errors
 #
 # CHECK DIR
 [[ -d "$target" ]] || { echo >&2 "ERROR: you didn't specify a valid EXTRACT directory"; exit 1; }
@@ -43,7 +42,7 @@ do
 # SHA FILE
   sha="$( sha256 "$file" |  awk '{ print $NF }' )"
 # EXTRACT FILE
-  cp "$file" "$dump"/pool/"$sha" || echo "ERROR: couldn't cp '$file'" | tee -a "$dump"/xs_log_cp.$d >&2;
+  cp "$file" "$dump"/pool/"$sha" || echo "ERROR: couldn't cp '$file'" >> "$dump"/xs_log_cp.$d;
   printf "%s\n" "$name" >> "$dump"/meta/m"$sha";
   printf "%s\n" "$path" >> "$dump"/meta/m"$sha";
 done
