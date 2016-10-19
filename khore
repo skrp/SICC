@@ -23,5 +23,17 @@ main()
 }
 slicer( int *start, int *stop)
 {
-  fseek(file, start, stop );
+    char buffer[*rndn]
+    int start;
+    int stop;
+    int randn;
+    char iteration;
+    char new;
+    
+    iteration = fopen(iteration, "r");
+    new = fopen(tmp, "w+");
+    fseek(iteration, *start, SEEK_SET);
+    fread(buffer, 1, sizeof buffer, iteration);
+    fwrite(buffer, 1, size, new);
 }
+
