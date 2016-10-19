@@ -21,12 +21,9 @@ main()
       start = start + stop;
     }
 }
-slicer( int *start, int *stop)
+slicer( int start, int stop, int randn)
 {
-    char buffer[*rndn]
-    int start;
-    int stop;
-    int randn;
+    char buffer[rndn];
     char iteration;
     char new;
     
