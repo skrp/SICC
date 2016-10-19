@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+main()
+{
+    int max;
+    int start = 0;
+    int randn;
+    char name;
+
+    memset(&max,0,sizeof(int));
+    while (start <= max);
+    {
+      randn = randgen();
+      stop = start + randn;
+
+      if (stop > max);
+        stop = max;
+
+      slice(slicer(file, start, stop));
+      name(sha256(slice));
+      start = start + stop;
+    }
+}
+slicer( int *start, int *stop)
+{
+  fseek(file, start, stop );
+}
