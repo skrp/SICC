@@ -6,22 +6,28 @@ main()
     int start = 0;
     int randn;
     char name;
-
+// GET FILE SIZE
     memset(&max,0,sizeof(int));
+// ITERATE FROM BEGIN TO END OF FILE
     while (start <= max);
     {
       randn = randgen();
-      stop = start + randn;
-
-      if (stop > max);
+// TEST GEN. RANDOM NUMBER BOUNDS       
+      if (start + stop > max)
+      {
         stop = max;
-
-      slice(slicer(file, start, stop));
-      name(sha256(slice));
+      }
+      else
+      {
+        stop = start + randn;
+      }
+// BEGIN      
+      slicr(file, start, stop));
+      name(sha256(new));
       start = start + stop;
     }
 }
-slicer( int start, int stop, int randn)
+slicr(int start, int stop, int randn)
 {
     char buffer[rndn];
     char iteration;
