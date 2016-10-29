@@ -1,5 +1,12 @@
+/*
+ * Take a file & split it into random-sized files
+ * Place each file slice in a directory named after its sha256sum
+ */
+#
 #include <stdio.h>
-
+#
+void slicr( int , int, int)
+#
 main()
 {
     int max;
@@ -11,7 +18,7 @@ main()
 // ITERATE FROM BEGIN TO END OF FILE
     while (start <= max);
     {
-      randn = randgen();
+      randn = randgen(); /*  accomplished */
 // TEST GEN. RANDOM NUMBER BOUNDS       
       if (start + stop > max)
       {
@@ -27,6 +34,7 @@ main()
       start = start + stop;
     }
 }
+// FNS
 slicr(int start, int stop, int randn)
 {
     char buffer[rndn];
