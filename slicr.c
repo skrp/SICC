@@ -288,3 +288,7 @@ int main(int argc, char *argv[])
     free(file_hash);
     return 0;
 }
+/* 
+ * MKRX skrp
+ * Feat. Mikhail Usvyatsov
+ */
