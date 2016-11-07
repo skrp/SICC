@@ -163,7 +163,6 @@ int main(int argc, char *argv[])
 			exit(1);
 		}
 
-		position += size;
 // TEST SIZE INTEGRITY
 		size_t read_size = fread(buffer, 1, (size_t) size, fp);
 		if (read_size != size)
@@ -202,6 +201,7 @@ int main(int argc, char *argv[])
 		fwrite(chunk_hash, 1, 2 * SHA256_DIGEST_LENGTH, mfp);
 		fwrite("\n", 1, 1, mfp);
 		free(chunk_hash);
+		position += size;
 	}
 //////////////////////////////////////////////////////////////
 	fclose(fp);
