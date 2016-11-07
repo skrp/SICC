@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 	char *tmp_hash = SHA256_File(tmp_file, NULL);
 	if (strcmp(tmp_hash, file_hash) != 0)
 	{
-		printf("integrity problem \n");
+		printf("INTEGRITY ISSUE : %s\n", argv[1]);
 	}
 // CLEAN UP
 	free(tmp_hash);
