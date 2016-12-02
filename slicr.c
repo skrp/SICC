@@ -20,7 +20,7 @@
 // USAGE
 static void usage()
 {
-	fprintf(stderr, "usage:		slicr file path_to_dump path_to_qui\n");
+	fprintf(stderr, "usage:	slicr file path_to_dump path_to_qui\n");
 	exit(1);
 }
 // RECOMPILE QUI TO FILE = dp
