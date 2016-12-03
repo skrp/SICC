@@ -2,31 +2,34 @@
 # SICC
 # Storage In Complete Chaos
 ###########################
-TODO: Fork by argument into parrallel execution; Error Handling
-MKRX	
-Meri Kann cibR punX
-pedrk.com
 
---------------------------------------------------------------------
-1_xs Xtract & Standardize Files Recursively
-2_shred Cut Files Into 1M Blocks
-3_kat Build File From Key
+1_Xtract_Standardize.sh 	
+     Grab, Standardize, Dedupe
+     All files recursively
+     
+2_Standard_Block.sh 	
+     Pool Wide Compression
+     
+3_Random_Block.c
+     Externals Drive
+     Obfuscate & Fill
+     SICC_QUI - key to file 
+     
+4_Rebuild_Blocks.sh
+     Use SICC_QUI
+     To make public gibberish
+     Into private information
 
-Keys 
-     - Each a file named after the Sha256 sum
-     - Contains an ordered list of all Sha256 block pieces
-     - Without key...gfl bro
-
-Pool
-     - Contains Fk-Tons of files sorted as its 1M Block Sha256 sum
 
 # LOCATIONS
-# $target/ = files will be shredded into 1M blocks
-# $dump/ = working directory
-# $dump/pool/ = final location 
-# $dump/limbo/ = temporary location for split
-# $dump/keys/ = ordered file pieces
-# $dump/output/ = recompiled files
+$target/ = files will be shredded into 1M blocks
+$dump/ = working directory
+$dump/pool/ = final location 
+$dump/limbo/ = temporary location for split
+$dump/QUI/ = ordered file pieces
+$dump/out/ = recompiled files
+
+
 -----------------------------------------------------------------------
 
 The Anarchist's Archive
@@ -49,11 +52,4 @@ The Anarchist's Archive
  - Isolated Metadata Interface
  - Sha256 File Deduplication
  - 100% Transient Data
- - Copy Only Socket Output
  - SICC Nonencryption Security
- 
- 
-#### Data
- read only data | zfs scrub raidz-3
--------------------------------------
- nfs read only exported/mounted
