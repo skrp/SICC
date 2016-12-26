@@ -28,7 +28,7 @@ dump=${2%/}
 [[ -d "dump" ]] || echo "INVALID DUMP DIR"; exit 1; 
 
 while read -r line
-	do
+do
 	wsha=$( sha256 "$target"/"$line" | awk '{ print $NF }' )
 	temp=""
 	split -a 6 -d -b 100000 "$target"/"$line" "$dump"/todo/;
@@ -47,5 +47,5 @@ while read -r line
 		then printf "SUCCESS $temp\n"
 		else printf "FAIL SHA RECHECK $tmp" >> "$dump"/fails
 	fi
-	done
+done
 
