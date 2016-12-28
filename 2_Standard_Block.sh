@@ -44,8 +44,8 @@ do
 		done
 	temp=$( sha256 "$dump"/temp | awk '{ print $NF }' )
 	if [ "$wsha" == "$temp" ]
-		then printf "SUCCESS "$temp"\n"
-		else printf "FAIL SHA RECHECK $temp" >> "$dump"/fails
+		then printf "SUCCESS $temp\n";
+		else printf "FAIL SHA RECHECK $temp" >> "$dump"/fails;
 	fi
 done
 
