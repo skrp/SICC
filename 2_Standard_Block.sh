@@ -24,14 +24,14 @@ fi
 target=${1%/}
 dump=${2%/}
 
-[[ -d "$target" ]] || echo "INVALID SPLIT DIR"; exit 1; 
-[[ -d "$dump" ]] || echo "INVALID DUMP DIR"; exit 1; 
+[[ -d "$target" ]] || { echo "INVALID SPLIT DIR"; exit 1; }
+[[ -d "$dump" ]] || { echo "INVALID DUMP DIR"; exit 1; } 
 
 for line in $target/*
 do
-	wsha=$( sha256 "$target"/"$line" | awk '{ print $NF }' )
-	temp=""
-	split -a 6 -d -b 100000 "$target"/"$line" "$dump"/todo/;
+	printf "$line\n";
+	wsha=$( sha256 "$line" | awk '{ print $NF }' )
+	split -a 6 -d -b 100000 "$line" "$dump"/todo/;
 	touch "$dump"/key/"$wsha";
 	printf "" > "$dump"/temp;
 	list=$( ls "$dump"/todo/ )
@@ -42,10 +42,9 @@ do
 		mv "$dump"/todo/"$i" "$dump"/processed/"$psha";
 		cat "$dump"/processed/"$psha" >> "$dump"/temp;
 		done
-	temp=$( sha256 "$dump"/temp | awk '{ print $NF }' )
-	if [ "$wsha" == "$temp" ]
-		then printf "SUCCESS $temp\n";
-		else printf "FAIL SHA RECHECK $temp" >> "$dump"/fails;
+	tmp=$( sha256 "$dump"/temp | awk '{ print $NF }' )
+	if [ "$wsha" == "$tmp" ]
+		then printf "SUCCESS $tmp\n";
+		else printf "FAIL SHA RECHECK $line" >> "$dump"/fails;
 	fi
 done
-
