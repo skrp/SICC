@@ -32,20 +32,20 @@ do
 	wsha=$( sha256 "$target"/"$line" | awk '{ print $NF }' )
 	temp=""
 	split -a 6 -d -b 100000 "$target"/"$line" "$dump"/todo/;
-	touch "$dump"/key/$wsha;
+	touch "$dump"/key/"$wsha";
 	printf "" > "$dump"/temp;
 	list=$( ls "$dump"/todo/ )
 	for i in $list
 		do
-		psha=$( sha256 "$dump"/todo/$i | awk '{ print $NF }' )
-		printf "%s\n" "$psha" >> "$dump"/key/k$wsha;
+		psha=$( sha256 "$dump"/todo/"$i" | awk '{ print $NF }' )
+		printf "%s\n" "$psha" >> "$dump"/key/k"$wsha";
 		mv "$dump"/todo/"$i" "$dump"/processed/"$psha";
 		cat "$dump"/processed/"$psha" >> "$dump"/temp;
 		done
 	temp=$( sha256 "$dump"/temp | awk '{ print $NF }' )
-	if [ $wsha == $temp ]
-		then printf "SUCCESS $temp\n"
-		else printf "FAIL SHA RECHECK $tmp" >> "$dump"/fails
+	if [ "$wsha" == "$temp" ]
+		then printf "SUCCESS "$temp"\n"
+		else printf "FAIL SHA RECHECK $temp" >> "$dump"/fails
 	fi
 done
 
