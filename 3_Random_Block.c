@@ -1,9 +1,9 @@
 /*	
- * slicr
- *
- * Shred a file into random parts
+ *#######################################
+ * slicr - shred a file into random parts
  * Store the part-listing as a qui file
- *
+ * - - - - - - - -feat Mikhail Usvyatsov
+ *#######################################
  * ARG2 - FILE
  * ARG3 - DUMP DIR
  * ARG4 - QUI DIR
