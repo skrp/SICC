@@ -1,9 +1,10 @@
 #!/usr/local/bin/bash
 #
-######################
+######################################
 # Xtract & Standardize
 # Files Recursively
-###################
+#    feat. Camusensei irc.freenode.net
+######################################
 #
 # USAGE
 if (( $# != 2 ))
