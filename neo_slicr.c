@@ -1,5 +1,7 @@
 ///////////////////////////////////////
-// SLICR
+// SLICR  
+// split file into random chunks
+// each chunk is named after their sha256 digest
 // QUI - file of ordered chunk listings
 #include <stdio.h>
 #include <stdlib.h>
