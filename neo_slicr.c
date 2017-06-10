@@ -1,7 +1,5 @@
 ///////////////////////////////////////
-// SLICR  
-// split file into random chunks
-// each chunk is named after their sha256 digest
+// SLICR
 // QUI - file of ordered chunk listings
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define DIGEST_LEN 32
+#define DIGEST_LEN 64
 #define STEP 1024
 #define LIM 99999 // chunk lim .1 MB
 static void usage();
@@ -26,9 +24,11 @@ int main(int argc, char *argv[])
 	FILE *qfp; // QUI FILE
 	fp = fopen(argv[1], "rb");
 	if (fp == NULL) { printf("ERR open %s\n", argv[1]); exit(1); }
-	struct stat st_dump;
+	struct stat st_dump; struct stat st_qui;
 	if ((stat(argv[2], &st_dump) != 0) && S_ISDIR(st_dump.st_mode))
 		{ printf("ERR dump dir %s\n", argv[2]); exit(1); }
+	if ((stat(argv[3], &st_qui) != 0) && S_ISDIR(st_qui.st_mode))
+		{ printf("ERR qui dir %s\n", argv[3]); exit(1); }
 	fseek(fp, 0, SEEK_END); f_size = ftell(fp); fseek(fp, 0, SEEK_SET);
 // DIGEST
 	char *digest = SHA256_File(argv[1], NULL);
@@ -75,8 +75,10 @@ int main(int argc, char *argv[])
 	}
 	fclose(fp); fclose(qfp);
 // SETUP VERIFY
-	qfp = fopen(qui_path, "rb"); free(qui_path);
-	if (qfp == NULL) { printf("ERR qui reread at %s\n", argv[1]); exit(1); }
+	printf("%s\n", qui_path);
+	FILE *vqfp; // reopen qui file
+	vqfp = fopen(qui_path, "rb"); free(qui_path);
+	if (vqfp == NULL) { printf("ERR qui reread at %s\n", argv[1]); exit(1); }
 	char *tmp = malloc(strlen(argv[2]) + 10);
 	strcpy(tmp, argv[2]);
 	if (tmp[strlen(tmp) - 1] != '/')
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
 		{ printf("ERR cant open %s\n", tmp); exit(1); }
 	size_t len;
 	char *chunk_fname;
-	while ((chunk_fname = fgetln(qfp, &len)) != NULL) 
+	while ((chunk_fname = fgetln(vqfp, &len)) != NULL) 
 	{
 		if (chunk_fname[len - 1] == '\n')
 			chunk_fname[len-1] = '\0';
@@ -102,7 +104,7 @@ int main(int argc, char *argv[])
 			{ printf("ERR with chunk_file & tmp\n"); exit(1); }
 		free(chunk_file);
 	}
-	fclose(qfp);
+	fclose(vqfp);
 // INTEGRITY CHK
 	char *tmp_digest = SHA256_File(tmp, NULL);
 	if (strcmp(tmp_digest, digest) != 0)
