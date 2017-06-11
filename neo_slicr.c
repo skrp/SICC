@@ -64,16 +64,16 @@ int main(int argc, char *argv[])
 			strcat(chunk_path, "/");
 		strcat(chunk_path, chunk_digest);
 // BUFFER
-		char *buffer = malloc((size_t)size); //!!!!!!!!!!!
+		char *buffer = malloc((size_t)size); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (buffer == NULL) 
 			{ printf("ERR slicr mem %s: position %ld @ %u\n", argv[1], position, size); exit(1); }
 // CHUNK 
-		FILE *cfp; //!!!!!!!!!!
-		cfp = fopen(chunk_path, "wb"); //!!!!!!!
+		FILE *cfp; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		cfp = fopen(chunk_path, "wb"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (cfp == NULL)0
 			{ printf("ERR chunk file %s : %s\n", argv[1], chunk_path); exit(1); }
 		free(chunk_path);
-		fwrite(buffer, 1, (size_t) size, cfp); //!!!!
+		fwrite(buffer, 1, (size_t) size, cfp); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		free(buffer); 
 		fclose(cfp);
 // ADD QUI
