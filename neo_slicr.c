@@ -1,5 +1,5 @@
-//////////////////////////
-// SLICR - file ofuscatior
+/////////////////////////
+// SLICR - file ofuscator
 // CHUNK: partial filed renamed its digest
 // DUMP: dir of chunks
 // QUI: file of ordered chunk listings
