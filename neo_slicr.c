@@ -1,8 +1,6 @@
-/////////////////////////
-// SLICR - file ofuscator
-// CHUNK: partial filed renamed its digest
-// DUMP: dir of chunks
-// QUI: file of ordered chunk listings
+///////////////////////////////////////
+// SLICR
+// QUI - file of ordered chunk listings
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -34,7 +32,7 @@ int main(int argc, char *argv[])
 		strcat(qui_path, "/");
 	strcat(qui_path, digest);
 // FILE SETUP
-	fp = fopen(argv[1], "rb");
+	fp = fopen(argv[1], "r");
 	qfp = fopen(qui_path, "w");
 	if (fp == NULL) 
 		{ printf("ERR open %s\n", argv[1]); exit(1); }
@@ -64,16 +62,19 @@ int main(int argc, char *argv[])
 			strcat(chunk_path, "/");
 		strcat(chunk_path, chunk_digest);
 // BUFFER
-		char *buffer = malloc((size_t) LIM); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		char *buffer = malloc((size_t) LIM); //!!!!!!!!!!!
 		if (buffer == NULL) 
 			{ printf("ERR slicr mem %s: position %ld @ %u\n", argv[1], position, size); exit(1); }
+		size_t read_size = fread(buffer, 1, (size_t) size, fp);
+		if (read_size != size)
+			{ printf("ERR read_size != size %s\n", argv[1]); exit(1); }	
 // CHUNK 
-		FILE *cfp; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		cfp = fopen(chunk_path, "wb"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if (cfp == NULL)0
+		FILE *cfp; //!!!!!!!!!!
+		cfp = fopen(chunk_path, "w"); //!!!!!!!
+		if (cfp == NULL)
 			{ printf("ERR chunk file %s : %s\n", argv[1], chunk_path); exit(1); }
 		free(chunk_path);
-		fwrite(buffer, 1, (size_t) size, cfp); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		fwrite(buffer, 1, (size_t) LIM, cfp); //!!!!
 		free(buffer); 
 		fclose(cfp);
 // ADD QUI
@@ -87,7 +88,8 @@ int main(int argc, char *argv[])
 // SETUP VERIFY
 	printf("%s\n", qui_path);
 	FILE *vqfp; // reopen qui file
-	vqfp = fopen(qui_path, "rb"); free(qui_path);
+	vqfp = fopen(qui_path, "r"); 
+	free(qui_path);
 	if (vqfp == NULL) { printf("ERR qui reread at %s\n", argv[1]); exit(1); }
 	char *tmp = malloc(strlen(argv[2]) + 10);
 	strcpy(tmp, argv[2]);
@@ -130,7 +132,7 @@ int build(char *chunk_file, const char *dest_file)
 {
 	FILE *sp; // CHUNK FILE
 	FILE *dp; // NEW FULL FILE
-	sp = fopen(chunk_file, "rb");
+	sp = fopen(chunk_file, "r");
 	dp = fopen(dest_file, "a");
 	if (sp == NULL || dp == NULL)
 		{ printf("Problem opening files %s or %s\n", chunk_file, dest_file); exit(1); }
