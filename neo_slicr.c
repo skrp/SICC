@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 			strcat(chunk_path, "/");
 		strcat(chunk_path, chunk_digest);
 // BUFFER
-		char *buffer = malloc((size_t)size); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		char *buffer = malloc((size_t) LIM); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (buffer == NULL) 
 			{ printf("ERR slicr mem %s: position %ld @ %u\n", argv[1], position, size); exit(1); }
 // CHUNK 
