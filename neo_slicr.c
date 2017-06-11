@@ -1,6 +1,8 @@
-///////////////////////////////////////
-// SLICR
-// QUI - file of ordered chunk listings
+//////////////////////////
+// SLICR - file ofuscatior
+// CHUNK: partial filed renamed its digest
+// DUMP: dir of chunks
+// QUI: file of ordered chunk listings
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
