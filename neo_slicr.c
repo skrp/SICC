@@ -9,27 +9,20 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define DIGEST_LEN 64
+#define DIGEST_LEN 65
 #define STEP 1024
-#define LIM 99999 // chunk lim .1 MB
+#define LIM 9999 // chunk lim 10KB
 static void usage();
 int build(char *chunk_file, const char *dest_file);
 int main(int argc, char *argv[])
 {
+// INITIALIZE ////////////////////////
 	int i=0;
 	long position=0, f_size=0;
 	uint32_t size=0;
 	if (argc != 4) usage();
 	FILE *fp; // TARGET FILE
 	FILE *qfp; // QUI FILE
-	fp = fopen(argv[1], "rb");
-	if (fp == NULL) { printf("ERR open %s\n", argv[1]); exit(1); }
-	struct stat st_dump; struct stat st_qui;
-	if ((stat(argv[2], &st_dump) != 0) && S_ISDIR(st_dump.st_mode))
-		{ printf("ERR dump dir %s\n", argv[2]); exit(1); }
-	if ((stat(argv[3], &st_qui) != 0) && S_ISDIR(st_qui.st_mode))
-		{ printf("ERR qui dir %s\n", argv[3]); exit(1); }
-	fseek(fp, 0, SEEK_END); f_size = ftell(fp); fseek(fp, 0, SEEK_SET);
 // DIGEST
 	char *digest = SHA256_File(argv[1], NULL);
 // QUI PATH
@@ -38,22 +31,29 @@ int main(int argc, char *argv[])
 	if (qui_path[strlen(qui_path) - 1] != '/')
 		strcat(qui_path, "/");
 	strcat(qui_path, digest);
-// QUI
+// FILE SETUP
+	fp = fopen(argv[1], "rb");
 	qfp = fopen(qui_path, "w");
-	if (qfp == NULL) { printf("ERR qui creation at %s\n", argv[1]); exit(1); }
+	if (fp == NULL) 
+		{ printf("ERR open %s\n", argv[1]); exit(1); }
+	if (qfp == NULL) 
+		{ printf("ERR qui creation at %s\n", argv[1]); exit(1); }
+	struct stat st_dump; 
+	struct stat st_qui;
+	if ((stat(argv[2], &st_dump) != 0) && S_ISDIR(st_dump.st_mode))
+		{ printf("ERR dump dir %s\n", argv[2]); exit(1); }
+	if ((stat(argv[3], &st_qui) != 0) && S_ISDIR(st_qui.st_mode))
+		{ printf("ERR qui dir %s\n", argv[3]); exit(1); }
+// FILE SIZE
+	fseek(fp, 0, SEEK_END); 
+	f_size = ftell(fp); 
+	fseek(fp, 0, SEEK_SET);
 // SLICR /////////////////////////////
-	while (position + 1 < f_size)
+	while (position < f_size)
 	{
 		size = arc4random_uniform(LIM);
 		if (position + size >= f_size)
 			size = f_size - position;
-// BUFFER
-		char *buffer = malloc(size);
-		if (buffer == NULL) 
-			{ printf("ERR slicr mem %s: position %ld @ %u\n", argv[1], position, size); exit(1); }
-		size_t read_size = fread(buffer, 1, (size_t) size, fp);
-		if (read_size != size) 
-			{ printf("ERR %s inequality size: %u != read_size: %zu\n", argv[1], size, read_size); exit(1); }
 // CHUNK ALLOCATION
 		char *chunk_digest = SHA256_FileChunk(argv[1], NULL, position, size);
 		char *chunk_path = malloc(strlen(argv[3]) + strlen(chunk_digest) + 1);
@@ -61,19 +61,27 @@ int main(int argc, char *argv[])
 		if (chunk_path[strlen(chunk_path) - 1] != '/')
 			strcat(chunk_path, "/");
 		strcat(chunk_path, chunk_digest);
+// BUFFER
+		char *buffer = malloc((size_t)size); //!!!!!!!!!!!
+		if (buffer == NULL) 
+			{ printf("ERR slicr mem %s: position %ld @ %u\n", argv[1], position, size); exit(1); }
 // CHUNK 
-		FILE *cfp;
-		cfp = fopen(chunk_path, "w");
-		if (cfp == NULL)
+		FILE *cfp; //!!!!!!!!!!
+		cfp = fopen(chunk_path, "wb"); //!!!!!!!
+		if (cfp == NULL)0
 			{ printf("ERR chunk file %s : %s\n", argv[1], chunk_path); exit(1); }
 		free(chunk_path);
-		fwrite(buffer, 1, (size_t) size, cfp);
-		free(buffer); fclose(cfp);
-		fwrite(chunk_digest, 1, 2 * DIGEST_LEN, qfp);
+		fwrite(buffer, 1, (size_t) size, cfp); //!!!!
+		free(buffer); 
+		fclose(cfp);
+// ADD QUI
+		fwrite(chunk_digest, 1, DIGEST_LEN, qfp);
 		fwrite("\n", 1, 1, qfp); 
-		position += size; free(chunk_digest);
+		free(chunk_digest);
+		position += size; 
 	}
-	fclose(fp); fclose(qfp);
+	fclose(fp); 
+	fclose(qfp);
 // SETUP VERIFY
 	printf("%s\n", qui_path);
 	FILE *vqfp; // reopen qui file
