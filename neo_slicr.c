@@ -1,6 +1,8 @@
-///////////////////////////////////////
-// SLICR
-// QUI - file of ordered chunk listings
+/	////////////////////////////////
+// SLICR - file shred obfuscation
+// chunk: partial file renamed by its sha
+// dump : dir of file chunks
+// qui  : reciepe to recompile file 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -9,28 +11,27 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define DIGEST_LEN 65
+#define SHA_LEN 65
 #define STEP 1024
 #define LIM 9999 // chunk lim 10KB
 static void usage();
 int build(char *chunk_file, const char *dest_file);
 int main(int argc, char *argv[])
 {
-// INITIALIZE ////////////////////////
+// INITIALIZE ////////////////////
 	int i=0;
 	long position=0, f_size=0;
-	uint32_t size=0;
 	if (argc != 4) usage();
 	FILE *fp; // TARGET FILE
 	FILE *qfp; // QUI FILE
-// DIGEST
-	char *digest = SHA256_File(argv[1], NULL);
+// SHA
+	char *sha = SHA256_File(argv[1], NULL);
 // QUI PATH
-	char *qui_path = malloc(strlen(argv[3]) + DIGEST_LEN + 1); 
+	char *qui_path = malloc(strlen(argv[3]) + SHA_LEN + 1); 
 	strcpy(qui_path, argv[3]);
 	if (qui_path[strlen(qui_path) - 1] != '/')
 		strcat(qui_path, "/");
-	strcat(qui_path, digest);
+	strcat(qui_path, sha);
 // FILE SETUP
 	fp = fopen(argv[1], "r");
 	qfp = fopen(qui_path, "w");
@@ -49,44 +50,56 @@ int main(int argc, char *argv[])
 	f_size = ftell(fp); 
 	fseek(fp, 0, SEEK_SET);
 // SLICR /////////////////////////////
+	int outs=0;
 	while (position < f_size)
 	{
-		size = arc4random_uniform(LIM);
-		if (position + size >= f_size)
-			size = f_size - position;
-// CHUNK ALLOCATION
-		char *chunk_digest = SHA256_FileChunk(argv[1], NULL, position, size);
-		char *chunk_path = malloc(strlen(argv[3]) + strlen(chunk_digest) + 1);
+// ERROR TOLERANCE
+		if (outs > 100)
+			{ printf("ERR %s @ %ld STRIKEOUT!!!\n", argv[1], position); exit(1); }
+// CHUNK SIZE
+		uint32_t chunk_size = arc4random_uniform(LIM);
+		if (position + chunk_size >= f_size)
+			chunk_size = f_size - position;
+// SHA256
+		char *chunk_sha = SHA256_FileChunk(argv[1], NULL, position, chunk_size);
+// CHUNK PATH
+		char *chunk_path = malloc(strlen(argv[3]) + SHA_LEN + 1);
 		strcpy(chunk_path, argv[2]);
-		if (chunk_path[strlen(chunk_path) - 1] != '/')
+		if (chunk_path[strlen(chunk_path) -1] != '/')
 			strcat(chunk_path, "/");
-		strcat(chunk_path, chunk_digest);
+		strcat(chunk_path, chunk_sha);
 // BUFFER
-		char *buffer = malloc((size_t) LIM); //!!!!!!!!!!!
-		if (buffer == NULL) 
-			{ printf("ERR slicr mem %s: position %ld @ %u\n", argv[1], position, size); exit(1); }
-		size_t read_size = fread(buffer, 1, (size_t) size, fp);
-		if (read_size != size)
-			{ printf("ERR read_size != size %s\n", argv[1]); exit(1); }	
-// CHUNK 
-		FILE *cfp; //!!!!!!!!!!
-		cfp = fopen(chunk_path, "w"); //!!!!!!!
+		char *chunk_buf =  malloc((size_t) LIM);
+		if (chunk_buf == NULL)
+			{ printf("ERR chunk_buf %s mem @ %ld\n", argv[1], position); exit(1); }
+		size_t read_size = fread(chunk_buf, 1, (size_t) chunk_size, fp);
+		if (read_size != chunk_size)
+			{ printf("ERR %s read_size: %ld - chunk_size: %u\n", argv[1], read_size, chunk_size); exit(1); }
+// CHUNK FILE
+		FILE *cfp = fopen(chunk_path, "w");
 		if (cfp == NULL)
-			{ printf("ERR chunk file %s : %s\n", argv[1], chunk_path); exit(1); }
-		free(chunk_path);
-		fwrite(buffer, 1, (size_t) LIM, cfp); //!!!!
-		free(buffer); 
+			{ printf("ERR chunk %s - position %ld\n", argv[1], position); exit(1); }
+		fwrite(chunk_buf, 1, (size_t) chunk_size, cfp);
 		fclose(cfp);
+// VERIFY CHUNK
+		char *ver_sha = SHA256_File(chunk_path, NULL);
+		if (strcmp(ver_sha, chunk_sha) != 0)
+		{ // OUT
+			printf("ERR %d OUT %s @ position %ld\n", outs, argv[1], position);
+			printf("%s %s\n", chunk_sha, ver_sha);
+			printf("%s\n", chunk_path);
+			outs++;
+	//		remove(chunk_path); free(chunk_buf);
+			continue;
+		}
 // ADD QUI
-		fwrite(chunk_digest, 1, DIGEST_LEN, qfp);
+		fwrite(chunk_sha, 1, SHA_LEN, qfp);
 		fwrite("\n", 1, 1, qfp); 
-		free(chunk_digest);
-		position += size; 
+		position += chunk_size; 
 	}
 	fclose(fp); 
 	fclose(qfp);
 // SETUP VERIFY
-	printf("%s\n", qui_path);
 	FILE *vqfp; // reopen qui file
 	vqfp = fopen(qui_path, "r"); 
 	free(qui_path);
@@ -118,11 +131,11 @@ int main(int argc, char *argv[])
 	}
 	fclose(vqfp);
 // INTEGRITY CHK
-	char *tmp_digest = SHA256_File(tmp, NULL);
-	if (strcmp(tmp_digest, digest) != 0)
+	char *tmp_sha = SHA256_File(tmp, NULL);
+	if (strcmp(tmp_sha, sha) != 0)
 		{ printf("INTEGRITY ISSUE: %s\n", argv[1]); exit(1); }
-	free(tmp_digest); remove(tmp); free(tmp);
-	free(chunk_fname); free(digest);
+	free(tmp_sha); remove(tmp); free(tmp);
+	free(chunk_fname); free(sha);
 	return 0;
 }
 // FNS ///////////////////////////////
