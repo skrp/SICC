@@ -24,15 +24,12 @@ int main(int argc, char *argv[])
 	if (argc != 4) usage();
 	FILE *fp; // TARGET FILE
 	FILE *qfp; // QUI FILE
-// SHA
 	char *sha = SHA256_File(argv[1], NULL);
-// QUI PATH
 	char *qui_path = malloc(strlen(argv[3]) + SHA_LEN + 1); 
 	strcpy(qui_path, argv[3]);
 	if (qui_path[strlen(qui_path) - 1] != '/')
 		strcat(qui_path, "/");
 	strcat(qui_path, sha);
-// FILE SETUP
 	fp = fopen(argv[1], "r");
 	qfp = fopen(qui_path, "w");
 	if (fp == NULL) 
@@ -62,7 +59,6 @@ int main(int argc, char *argv[])
 			continue;
 		if (position + chunk_size >= f_size)
 			chunk_size = f_size - position;
-// SHA256
 		char *chunk_sha = SHA256_FileChunk(argv[1], NULL, position, chunk_size);
 // CHUNK PATH
 		char *chunk_path = malloc(strlen(argv[3]) + SHA_LEN + 1);
@@ -91,7 +87,7 @@ int main(int argc, char *argv[])
 			printf("%s %s\n", chunk_sha, ver_sha);
 			printf("%s\n", chunk_path);
 			outs++;
-	//		remove(chunk_path); free(chunk_buf);
+			remove(chunk_path); free(chunk_buf);
 			continue;
 		}
 // ADD QUI
