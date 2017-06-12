@@ -58,6 +58,8 @@ int main(int argc, char *argv[])
 			{ printf("ERR %s @ %ld STRIKEOUT!!!\n", argv[1], position); exit(1); }
 // CHUNK SIZE
 		uint32_t chunk_size = arc4random_uniform(LIM);
+		if (chunk_size < 100)
+			continue;
 		if (position + chunk_size >= f_size)
 			chunk_size = f_size - position;
 // SHA256
@@ -85,11 +87,11 @@ int main(int argc, char *argv[])
 		char *ver_sha = SHA256_File(chunk_path, NULL);
 		if (strcmp(ver_sha, chunk_sha) != 0)
 		{ // OUT
-			printf("ERR %d OUT %s @ position %ld\n", outs, argv[1], position);
+			printf("ERR %d OUT %s @ %u\n", outs, argv[1], chunk_size);
 			printf("%s %s\n", chunk_sha, ver_sha);
 			printf("%s\n", chunk_path);
 			outs++;
-//		remove(chunk_path); free(chunk_buf);
+	//		remove(chunk_path); free(chunk_buf);
 			continue;
 		}
 // ADD QUI
