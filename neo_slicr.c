@@ -1,4 +1,4 @@
-/	////////////////////////////////
+/////////////////////////////////
 // SLICR - file shred obfuscation
 // chunk: partial file renamed by its sha
 // dump : dir of file chunks
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 			printf("%s %s\n", chunk_sha, ver_sha);
 			printf("%s\n", chunk_path);
 			outs++;
-	//		remove(chunk_path); free(chunk_buf);
+//		remove(chunk_path); free(chunk_buf);
 			continue;
 		}
 // ADD QUI
