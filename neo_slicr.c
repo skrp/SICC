@@ -171,6 +171,8 @@ int build(char *chunk_file, const char *dest_file)
 	fclose(sp); fclose(dp); return 0;
 }
 /*
+logic -> random-size slice -> slice sha = $presha -> copy # of bytes to new_file -> reverify slice sha with $presha
+
 <dead> well i would start by factoring out a lot of this into small functions
 <dead> why does your build function while() loop condition have position + 1 < f_size?
 <dead> why the +1
