@@ -4,19 +4,25 @@
 
 int main(int argc, *argv[])
 {
-	FILE *fp1, *fp2;
-	long size = fsize(argv[1]);
-	int total=size/10000+1, count=0;
+	FILE *fpl, *tfp, *bfp;
+	int total=size/10000+1, position=0, i=0;
 	char fname[120]
 	char data[SIZE+1];	
-	fp1 = fopen(argv1, r);
-		while(fgets(data, SIZE, fp1) && count <= SIZE)
+	fpl = fopen(argv[1], r);
+	char list[SIZE];
+	while (list[i] != NULL)
+		long size = fsize(list[i]);
+		tfp = fopen(list[i], rb);
+		while(fgets(data, SIZE, tfp) && position <= SIZE)
 		{
-			char *chunk_sha = SHA256_FileChunk(argv[1], NULL, position, SIZE);
-			fputs(data, fp2);
+			char *b_sha = SHA256_FileChunk(list[i], NULL, position, SIZE);
+			fputs(data, bfp);
+			char *bpath[250] = path(&argv[2], &bfp);
+			bfp = fopen(bpath, "w");
+			fputs(data, bfp);
 			position += SIZE;
 		}
-		fclose(fp2);
+		fclose(bfp); i++;
 	}
 	return 0;
 }
@@ -37,4 +43,9 @@ long fsize(char *name)
 		fclose(fp);
 	}
 	return size;
+}
+void path(char, char)
+{
+	strcat(path, b_sha);
+	p
 }
