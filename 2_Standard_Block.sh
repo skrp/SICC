@@ -11,7 +11,10 @@
 # $dump/limbo/ = temporary location for split
 # $dump/keys/ = ordered file pieces
 #
-# USAGE
+# PERF ###############
+# 120,000 / hr 
+# 2.8M / day
+# USAGE ##############
 if (( $# != 2 ))
 then
 	printf"\nUsage: \n";
