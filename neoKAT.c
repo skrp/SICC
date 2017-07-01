@@ -19,7 +19,8 @@ int main(int argc, *argv[])
 	}
 	return 0;
 }
-char sha
+char sha()
+{
 	return;
 }
 void usage()
