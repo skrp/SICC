@@ -23,6 +23,7 @@ fi
 # VARIABLES
 target=${1%/}
 dump=${2%/}
+block=10000
 
 [[ -d "$target" ]] || { echo "INVALID SPLIT DIR"; exit 1; }
 [[ -d "$dump" ]] || { echo "INVALID DUMP DIR"; exit 1; } 
@@ -31,7 +32,7 @@ for line in $target/*
 do
 	printf "$line\n";
 	wsha=$( sha256 "$line" | awk '{ print $NF }' )
-	split -a 6 -d -b 100000 "$line" "$dump"/todo/;
+	split -a 6 -d -b $block "$line" "$dump"/todo/;
 	touch "$dump"/key/"$wsha";
 	printf "" > "$dump"/temp;
 	list=$( ls "$dump"/todo/ )
