@@ -10,10 +10,11 @@ int main(int argc, *argv[])
 	char fname[120]
 	char data[SIZE+1];	
 	fp1 = fopen(argv1, r);
-		while(fgets(data, SIZE, fp1) && count <= SEGMENT)
+		while(fgets(data, SIZE, fp1) && count <= SIZE)
 		{
-			count += SIZE;
+			char *chunk_sha = SHA256_FileChunk(argv[1], NULL, position, SIZE);
 			fputs(data, fp2);
+			position += SIZE;
 		}
 		fclose(fp2);
 	}
