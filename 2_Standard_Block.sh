@@ -7,9 +7,9 @@
 # LOCATIONS
 # $target/ = files will be shredded into 1M blocks
 # $dump/ = working directory
-# $dump/pool/ = final location 
-# $dump/limbo/ = temporary location for split
-# $dump/keys/ = ordered file pieces
+# $dump/processed/ = final location 
+# $dump/todo/ = temporary location for split
+# $dump/key/ = ordered file pieces
 #
 # PERF ###############
 # 120,000 / hr 
