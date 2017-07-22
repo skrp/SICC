@@ -52,6 +52,21 @@ The Anarchist's Archive
  - 100% Transient Data
  - SICC Nonencryption Security
 
-
+######################################
+# BLKR - core engine performance stats
+# zfs blk size 128k ##################
+my $size = 128000;
+# .0035sec * 12,000,000 = 43k sec = 12 hrs per terabyte
+# USB3 8T time: { real-26.10m, user-5.16m, sys-3.29m } 
+# WCPU 30% SIZE 58304K
+#    vs
+# raidz2 time: { }
+# WCPU 6% SIZE 58304K
+# 99999 size ############
+# 0.015 sec per block
+# 0.015 * 12,000,000 = 180k sec = 50 hrs per terabyte
+# NFS ######################
+# .08 sec per block
+# .08 sec * 12,000,000 = 960k sec = 11 days per terabyte
 # OBSD ###################
 545_656 inodes available
