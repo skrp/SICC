@@ -63,6 +63,7 @@ my $size = 128000;
 # raidz2 time: { }
 # WCPU 6% SIZE 58304K
 # dtrace write time 19,000nsec per write
+# .000019sec * 12,000,000 = 228sec
 # 99999 size ############
 # 0.015 sec per block
 # 0.015 * 12,000,000 = 180k sec = 50 hrs per terabyte
