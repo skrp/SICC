@@ -24,14 +24,11 @@ if (substr($path, -1) ne "/")
 my $name = name();
 chdir('/tmp/');
 my $RATE = 100; 
-my $size = 99999;
-#my $size = 9968;
+my $size = 128000;
 my $count = 0;
 
 my $dump = "$name"."_dump/";
 my $log = "$name"."_log";
-my $SLEEP = "$name"."_SLEEP"; 
-my $SUICIDE = "$name"."_SUICIDE";
 
 mkdir $dump or die "dump FAIL\n";
 open(my $Lfh, '>>', $log);
