@@ -48,10 +48,6 @@ print $Lfh "ttl $ttl\n";
 
 foreach my $i (@QUE)
 {
-	if (-e $SUICIDE)
-    		{ SUICIDE(); }
-	if (-e $SLEEP)
-    		{ SLEEP(); }
 	print $Lfh "started $i\n";
 	blkr($i);
 	$count++;
@@ -61,20 +57,6 @@ foreach my $i (@QUE)
 my $dtime = TIME(); print $Lfh "FKTHEWRLD $dtime\n";
 
 # SUB ###########################################################
-sub SUICIDE
-{
-	unlink $SUICIDE;
-	my $xtime = TIME(); print $Lfh "FKTHEWORLD $xtime\n";
-	exit;
-}
-sub SLEEP
-{
-	open(my $Sfh, '<', $SLEEP);
-	my $timeout = readline $Sfh; chomp $timeout;
-	my $ztime = TIME(); print $Lfh "sleep $ztime $timeout\n";
-	close $Sfh; unlink $SLEEP;
-	sleep $timeout;
-}
 sub TIME
 {
 	my $t = localtime;
