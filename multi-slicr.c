@@ -18,6 +18,7 @@ static void usage()
 int build(char *f_block, char *v_file);
 int slicr(char *target_file, char *dump_path, char *key_path);
 int main(int argc, char *argv[])
+
 {
 // ARG CHK
   struct stat st_dump;
@@ -32,7 +33,17 @@ int main(int argc, char *argv[])
 // SEED RAND
   srand((unsigned int) time(NULL));
 // BEGIN ##############################
+  FILE *lfp;
+  char *list_line;
   
+  if ((lfp = fopen(argv[1], "rb")) < 0) 
+    { printf("FAIL fopen(fp) at%s\n", argv[1]); }
+  
+  while(fgets(list_line, 66, lfp) != NULL)
+  {
+    //list_line/path
+    slicr(
+    
 }
 int slicr(char *target_file, char *dump_path, char *key_path)
 {
