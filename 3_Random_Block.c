@@ -1,5 +1,5 @@
 //#####################################
-// SLICR - shred file into random sizes
+// SLICR - shred file into random-sized blocks
 // FreeBSD
 #include <stdio.h>
 #include <unistd.h>
@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
     { printf("FAIL dump_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
     { printf("FAIL key_path %s", argv[3]); exit(1); }
-// SEED RAND
-  srand((unsigned int) time(NULL));
 // DECLARE 
   FILE *fp, *kfp, *kkfp;
   
@@ -71,11 +69,10 @@ int main(int argc, char *argv[])
   {
 // DECLARE
     FILE *bbfp;
-    unsigned long int size, read_size;
+    uint32_t size, read_size;
     char *buf, *b_sha, *ff_block;
 // block SIZE 
-    size = rand() % SIZE;
-    
+    size = arc4random_uniform((uint32_t) SIZE);
     if (size == 0)
       { continue; }
 
@@ -86,7 +83,7 @@ int main(int argc, char *argv[])
       { printf("FAIL memory buf pos: %llu\n", position); exit(1); }
 // write block
     if ((read_size = fread(buf, 1, (size_t) size, fp)) != size)
-      { printf("FAIL read mismatch size: %lu read_size: %lu\n", size, read_size); exit(1); }
+      { printf("FAIL read mismatch size: %u read_size: %u\n", size, read_size); exit(1); }
 // sha block
     b_sha = SHA256_FileChunk(argv[1], NULL, (off_t) position, (off_t) size);
     ff_block = malloc(strlen(argv[2] + 100));
