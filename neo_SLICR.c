@@ -2,6 +2,7 @@
 // SLICR - shred file into random sizes
 // FreeBSD
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -9,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
+#define SHALEN 65
 #define SIZE 1000000 // 1B -> 1MB
 // USAGE
 static void usage()
@@ -28,16 +30,17 @@ int main(int argc, char *argv[])
     { printf("FAIL key_path %s", argv[3]); exit(1); }
 // SEED RAND
   srand((unsigned int) time(NULL));
-// DECLARE
-  FILE *fp, *kfp, *vfp;
-
+// DECLARE 
+  FILE *fp, *kfp, *kkfp;
+  
   unsigned long long int f_size, position = 0;
 
   char *key_path, *dump_path;
   char *f_sha, *v_sha;
-  char *f_key, *v_file, *k_line;
-
-  size_t len;
+  char *f_key, *v_file;
+  char k_line[66];
+  
+  size_t len; 
 // SANITIZE
   dump_path = malloc(strlen(argv[2] + 100));
   strcpy(dump_path, argv[2]);
@@ -49,7 +52,7 @@ int main(int argc, char *argv[])
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
 // TARGET FILE
-  if ((fp = fopen(argv[1], "rb")) < 0)
+  if ((fp = fopen(argv[1], "rb")) < 0) 
     { printf("FAIL fopen(fp) at%s\n", argv[1]); }
 
   fseek(fp, 0, SEEK_END);
@@ -70,15 +73,15 @@ int main(int argc, char *argv[])
     FILE *bbfp;
     unsigned long int size, read_size;
     char *buf, *b_sha, *ff_block;
-// block SIZE
+// block SIZE 
     size = rand() % SIZE;
-
+    
     if (size == 0)
       { continue; }
 
     if (position + size >= f_size)
       { size = f_size - position; }
-
+    
     if ((buf = malloc(size)) == NULL)
       { printf("FAIL memory buf pos: %llu\n", position); exit(1); }
 // write block
@@ -103,43 +106,43 @@ int main(int argc, char *argv[])
     position += size;
 ///////////////////////////////////////
 // cleanup
-    free(buf); free(b_sha); free(ff_block);
+    free(buf); free(b_sha); free(ff_block); 
     fclose(bbfp);
   }
 
+  fclose(kfp);
 // VERIFICATION BUILD &&&&&&&&&&&&&&&&&
   v_file = malloc(strlen(argv[3] + 10));
   strcpy(v_file, key_path);
-  strcat(v_file, "tmp");
+  strcat(v_file, "tmp"); 
 
-  if ((vfp = fopen(v_file, "wb")) < 0)
-    { printf("FAIL fopen(v_file) at: %s\n",v_file); exit(1); }
-
-  if ((kfp = fopen(f_key, "rb")) < 0)
+  if ((kkfp = fopen(f_key, "rb")) < 0)
     { printf("FAIL fopen(f_key) at: %s\n", f_key); exit(1); }
+
+  unlink(v_file); // remove previous tmp-file
 // build verification-file
-  while ((k_line = fgetln(kfp, &len)) != NULL)
+  while(fgets(k_line, 66, kkfp) != NULL)
   {
-    printf("%s\n", k_line);
-    char *ff_block = malloc(strlen(argv[2] + 100));
-    strcpy(ff_block, dump_path);
-    strcat(ff_block, k_line);
-    if (ff_block[strlen(ff_block) - 1] =='\n')
-      { ff_block[strlen(ff_block) - 1] = '\0'; }
+    if (k_line[strlen(k_line) - 1] =='\n')
+      { k_line[strlen(k_line) - 1] = '\0'; }
 
-    if ((build(ff_block, v_file)) < 0)
+    char *fff_block = malloc(strlen(argv[2] + 100));
+    strcpy(fff_block, dump_path);
+    strcat(fff_block, k_line); 
+// FN 
+    if ((build(fff_block, v_file)) < 0) 
       { printf("FAIL push(v_file) at: %s\n", f_key); exit(1); }
-
-    free(ff_block);
+    
+    free(fff_block);
   }
 // INTEGRITY CHK
   v_sha = SHA256_File(v_file, NULL);
   if ((strcmp(f_sha, v_sha)) != 0)
-    { printf("FAIL VERIFICATION with %s\n", f_key); exit(1); }
+    { printf("FAIL VERIFICATION with %s bad: %s\n", f_key, v_sha); exit(1); }
   printf("f: %s v: %s\n", f_sha, v_sha);
 // cleanup
-  fclose(fp); fclose(kfp); fclose(vfp);
-  free(key_path); free(dump_path);
+  fclose(fp); fclose(kkfp);
+  free(key_path); free(dump_path); 
   free(f_key); free(v_file);
   free(f_sha); free(v_sha);
   return 0;
@@ -151,9 +154,9 @@ int build(char *f_block, char *v_file)
   unsigned long int b_size, writ_size;
   char *buf;
 // verification file
-  if ((vfp = fopen(v_file, "wb")) < 0)
+  if ((vfp = fopen(v_file, "ab")) < 0)
     { printf("FAIL fopen(v_file) at: %s\n",v_file); exit(1); }
-// block file
+// block file 
   if ((bfp = fopen(f_block, "rb")) < 0)
     { printf("FAIL fopen(f_block) at: %s\n",f_block); exit(1); }
 
@@ -161,7 +164,7 @@ int build(char *f_block, char *v_file)
   b_size = ftell(bfp);
   fseek(bfp, 0, SEEK_SET);
 
-  if ((buf = malloc(b_size)) == NULL)
+  if ((buf = malloc(b_size)) == NULL) 
     { printf("FAIL out of memory buf b_size: %lu\n", b_size); exit(1); }
 // read block-file
   if ((writ_size = fread(buf, 1, (size_t) b_size, bfp)) != b_size)
