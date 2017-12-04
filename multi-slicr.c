@@ -22,35 +22,35 @@ int main(int argc, char *argv[])
 // ARG CHK
   struct stat st_dump;
   char *target_list, *target_path, *dump_path, *key_path;
-  
+
   if (argc != 5)
     { usage(); }
-  
+
   if (stat(argv[2], &st_dump) != 0)
     { printf("FAIL target_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
     { printf("FAIL dump_path %s", argv[3]); exit(1); }
   if (stat(argv[4], &st_dump) != 0)
     { printf("FAIL key_path %s", argv[4]); exit(1); }
- 
+
 // SANITIZE
   target_list = malloc(strlen(argv[1] + 100));
   target_path = malloc(strlen(argv[2] + 100));
   dump_path = malloc(strlen(argv[3] + 100));
   key_path = malloc(strlen(argv[4] + 100));
-  
+
   strcpy(target_list, argv[1]);
   strcpy(target_path, argv[2]);
   strcpy(dump_path, argv[3]);
   strcpy(key_path, argv[4]);
-  
+
   if (target_path[strlen(target_path) - 1] != '/')
-    { strcat(target_path, "/"); }  
+    { strcat(target_path, "/"); }
   if (dump_path[strlen(dump_path) - 1] != '/')
     { strcat(dump_path, "/"); }
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
-  
+
 // SEED RAND
   srand((unsigned int) time(NULL));
 
@@ -59,29 +59,29 @@ int main(int argc, char *argv[])
   char *list_line, *target_file;
 
   strcpy(target_file, target_file_path);
-  if ((lfp = fopen(target_file, "rb")) < 0) 
+  if ((lfp = fopen(target_file, "rb")) < 0)
     { printf("FAIL fopen(fp) at%s\n", target_list); }
-  
+
   while(fgets(list_line, 66, lfp) != NULL)
   {
     slicr(target_file, dump_path, key_path);
-    
+
 }
 int slicr(char *target_file, char *dump_path, char *key_path)
 {
-// DECLARE 
+// DECLARE
   FILE *fp, *kfp, *kkfp;
-  
+
   unsigned long long int f_size, position = 0;
 
   char *key_path, *dump_path;
   char *f_sha, *v_sha;
   char *f_key, *v_file;
   char k_line[66];
-  
-  size_t len; 
+
+  size_t len;
 // TARGET FILE
-  if ((fp = fopen(target_file, "rb")) < 0) 
+  if ((fp = fopen(target_file, "rb")) < 0)
     { printf("FAIL fopen(fp) at%s\n", target_file); }
 
   fseek(fp, 0, SEEK_END);
@@ -102,23 +102,23 @@ int slicr(char *target_file, char *dump_path, char *key_path)
     FILE *bbfp;
     unsigned long int size, read_size;
     char *buf, *b_sha, *ff_block;
-// block SIZE 
+// block SIZE
     size = rand() % SIZE;
-    
+
     if (size == 0)
       { continue; }
 
     if (position + size >= f_size)
       { size = f_size - position; }
-    
+
     if ((buf = malloc(size)) == NULL)
       { printf("FAIL memory buf pos: %llu\n", position); exit(1); }
 // write block
     if ((read_size = fread(buf, 1, (size_t) size, fp)) != size)
       { printf("FAIL read mismatch size: %lu read_size: %lu\n", size, read_size); exit(1); }
 // sha block
-    b_sha = SHA256_FileChunk(argv[1], NULL, (off_t) position, (off_t) size);
-    ff_block = malloc(strlen(argv[2] + 100));
+    b_sha = SHA256_FileChunk(target_file, NULL, (off_t) position, (off_t) size);
+    ff_block = malloc(strlen(dump_path + 100));
     strcpy(ff_block, dump_path);
     strcat(ff_block, b_sha);
 
@@ -135,7 +135,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
     position += size;
 ///////////////////////////////////////
 // cleanup
-    free(buf); free(b_sha); free(ff_block); 
+    free(buf); free(b_sha); free(ff_block);
     fclose(bbfp);
   }
 
@@ -143,7 +143,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 // VERIFICATION BUILD &&&&&&&&&&&&&&&&&
   v_file = malloc(strlen(key_path + 10));
   strcpy(v_file, key_path);
-  strcat(v_file, "tmp"); 
+  strcat(v_file, "tmp");
 
   if ((kkfp = fopen(f_key, "rb")) < 0)
     { printf("FAIL fopen(f_key) at: %s\n", f_key); exit(1); }
@@ -157,11 +157,11 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
     char *fff_block = malloc(strlen(dump_path + 100));
     strcpy(fff_block, dump_path);
-    strcat(fff_block, k_line); 
-// FN 
-    if ((build(fff_block, v_file)) < 0) 
+    strcat(fff_block, k_line);
+// FN
+    if ((build(fff_block, v_file)) < 0)
       { printf("FAIL push(v_file) at: %s\n", f_key); exit(1); }
-    
+
     free(fff_block);
   }
 // INTEGRITY CHK
@@ -171,7 +171,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   printf("f: %s v: %s\n", f_sha, v_sha);
 // cleanup
   fclose(fp); fclose(kkfp);
-  free(key_path); free(dump_path); 
+  free(key_path); free(dump_path);
   free(f_key); free(v_file);
   free(f_sha); free(v_sha);
   return 0;
@@ -185,7 +185,7 @@ int build(char *f_block, char *v_file)
 // verification file
   if ((vfp = fopen(v_file, "ab")) < 0)
     { printf("FAIL fopen(v_file) at: %s\n",v_file); exit(1); }
-// block file 
+// block file
   if ((bfp = fopen(f_block, "rb")) < 0)
     { printf("FAIL fopen(f_block) at: %s\n",f_block); exit(1); }
 
@@ -193,7 +193,7 @@ int build(char *f_block, char *v_file)
   b_size = ftell(bfp);
   fseek(bfp, 0, SEEK_SET);
 
-  if ((buf = malloc(b_size)) == NULL) 
+  if ((buf = malloc(b_size)) == NULL)
     { printf("FAIL out of memory buf b_size: %lu\n", b_size); exit(1); }
 // read block-file
   if ((writ_size = fread(buf, 1, (size_t) b_size, bfp)) != b_size)
