@@ -2,6 +2,17 @@
 # SICC - Storage In Complete Chaos
 # https://ibin.co/38jCrM5z7me2.jpg
 
+System In Complete Chaos: encryptionless security thru obfuscation
+
+# INPUT ##########################
+file{[data][meta]}
+# OUPUT ##########################
+file{[meta]}
+file{[key]}
+file{[data]} file{[data]} file{[data]} file{[data]} ...
+
+##################################
+
 1_Xtract_Standardize.sh 	
      Grab, Standardize, Dedupe
      All files recursively
