@@ -19,23 +19,23 @@ int build(char *f_block, char *v_file);
 int slicr(char *target_file, char *dump_path, char *key_path);
 int main(int argc, char *argv[])
 {
+  // ARG CHK
+  struct stat st_dump;
+  
   if (argc != 4)
     { usage(); }
-   if (stat(argv[2], &st_dump) != 0)
+  
+  if (stat(argv[2], &st_dump) != 0)
     { printf("FAIL dump_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
     { printf("FAIL key_path %s", argv[3]); exit(1); }
   // SEED RAND
   srand((unsigned int) time(NULL));
+  
 }
 // BEGIN ##############################
 int slicr(int argc, char *argv[])
 {
-// ARG CHK
-  struct stat st_dump;
-
-
-
 // DECLARE 
   FILE *fp, *kfp, *kkfp;
   
