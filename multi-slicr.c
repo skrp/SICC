@@ -52,15 +52,15 @@ int main(int argc, char *argv[])
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
 
-// BEGIN ##############################
+// LIST ###############################
   FILE *lfp;
   char *list_line[SHALEN];
 
   typedef struct list
     { char line[SHALEN]; struct list *next; } list_t;
 
-  list_t *l = NULL
-  l = malloc(sizeof(list_t));
+  list_t *list = NULL
+  list = malloc(sizeof(list_t));
 
   if ((lfp = fopen(target_list, "rb")) < 0)
     { printf("FAIL fopen(fp) at: %s\n", target_list); }
@@ -69,20 +69,21 @@ int main(int argc, char *argv[])
   {
     if (list_line[strlen(list_line) - 1] == '\n')
       { list_line[strlen(list_line) - 1] = '\0'; }
-    l->line = list_line;
-    l->next = NULL;
-    l = l->next;
+    list->line = list_line;
+    list->next = NULL;
+    list = list->next;
   }
 
   fclose(lfp);
   free(target_list);
-
-  while (l != NULL)
+// WORK LIST ##########################
+  list_t *LIST = list;
+  while (LIST != NULL)
   {
     target_file = malloc(strlen(target_path + SHALEN));
     strcopy(target_file, target_path);
-    strcat(target_file, l->line);
-    l = l->next;
+    strcat(target_file, LIST->line);
+    LIST = LIST->next;
 // ACTION
     slicr(target_file, dump_path, key_path);
 //  cleanup
