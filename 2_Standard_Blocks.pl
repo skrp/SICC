@@ -4,7 +4,7 @@ use File::Path; use File::Copy;
 use Digest::SHA qw(sha256_hex); 
 use Time::HiRes 'gettimeofday', 'tv_interval';
 ######################################################
-# BLKR - zfs ofuscator compressor
+# BLKR - shreds file into standard-sized blocks
 
 # INIT ###############################################
 my ($que, $path) = @ARGV;
