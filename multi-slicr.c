@@ -30,19 +30,34 @@ int main(int argc, char *argv[])
     { printf("FAIL dump_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
     { printf("FAIL key_path %s", argv[3]); exit(1); }
+ 
+// SANITIZE
+  dump_path = malloc(strlen(argv[2] + 100));
+  strcpy(dump_path, argv[2]);
+  if (dump_path[strlen(dump_path) - 1] != '/')
+    { strcat(dump_path, "/"); }
+  key_path = malloc(strlen(argv[3] + 100));
+  strcpy(key_path, argv[3]);
+  if (key_path[strlen(key_path) - 1] != '/')
+    { strcat(key_path, "/"); }
+
 // SEED RAND
   srand((unsigned int) time(NULL));
+
 // BEGIN ##############################
   FILE *lfp;
   char *list_line;
-  
-  if ((lfp = fopen(argv[1], "rb")) < 0) 
+  size_t len; 
+ 
+  if ((lfp = fopen(target_file, "rb")) < 0) 
     { printf("FAIL fopen(fp) at%s\n", argv[1]); }
+  
+      //list_line/path
   
   while(fgets(list_line, 66, lfp) != NULL)
   {
-    //list_line/path
-    slicr(
+
+    slicr(target_file, dump_path, key_path);
     
 }
 int slicr(char *target_file, char *dump_path, char *key_path)
@@ -57,17 +72,8 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   char *f_key, *v_file;
   char k_line[66];
   
-  size_t len; 
-// SANITIZE
-  dump_path = malloc(strlen(argv[2] + 100));
-  strcpy(dump_path, argv[2]);
-  if (dump_path[strlen(dump_path) - 1] != '/')
-    { strcat(dump_path, "/"); }
 
-  key_path = malloc(strlen(argv[3] + 100));
-  strcpy(key_path, argv[3]);
-  if (key_path[strlen(key_path) - 1] != '/')
-    { strcat(key_path, "/"); }
+
 // TARGET FILE
   if ((fp = fopen(argv[1], "rb")) < 0) 
     { printf("FAIL fopen(fp) at%s\n", argv[1]); }
