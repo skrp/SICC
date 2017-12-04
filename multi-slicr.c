@@ -51,9 +51,6 @@ int main(int argc, char *argv[])
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
 
-// SEED RAND
-  srand((unsigned int) time(NULL));
-
 // BEGIN ##############################
   FILE *lfp;
   char *list_line;
@@ -64,7 +61,6 @@ int main(int argc, char *argv[])
     { printf("FAIL fopen(fp) at: %s\n", target_list); }
 
   while(fgets(list_line, SHALEN, lfp) != NULL)
-
   {
     if (list_line[strlen(list_line) - 1] == '\n')
       { list_line[strlen(list_line) - 1] = '\0'; }
@@ -83,9 +79,12 @@ int main(int argc, char *argv[])
     strcat(target_file, list_line);
 // ACTION
     slicr(target_file, dump_path, key_path);
+//  cleanup
     free(target_file);
   }
+  free(target_path); free(path_path); free(key_path);
 }
+// slicr ##############################
 int slicr(char *target_file, char *dump_path, char *key_path)
 {
 // DECLARE
@@ -118,10 +117,11 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   {
 // DECLARE
     FILE *bbfp;
-    unsigned long int size, read_size;
+    uint32_t size, read_size;
     char *buf, *b_sha, *ff_block;
 // block SIZE
-    size = rand() % SIZE;
+
+    size = arc4random_uniform((uint32_t) SIZE);
 
     if (size == 0)
       { continue; }
@@ -156,9 +156,8 @@ int slicr(char *target_file, char *dump_path, char *key_path)
     free(buf); free(b_sha); free(ff_block);
     fclose(bbfp);
   }
-
   fclose(kfp);
-// VERIFICATION BUILD &&&&&&&&&&&&&&&&&
+// VERIFICATION BUILD #################
   v_file = malloc(strlen(key_path + 10));
   strcpy(v_file, key_path);
   strcat(v_file, "tmp");
@@ -189,12 +188,11 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   printf("f: %s v: %s\n", f_sha, v_sha);
 // cleanup
   fclose(fp); fclose(kkfp);
-  free(key_path); free(dump_path);
   free(f_key); free(v_file);
   free(f_sha); free(v_sha);
   return 0;
 }
-// FN #################################
+// build ##############################
 int build(char *f_block, char *v_file)
 {
   FILE *vfp, *bfp;
