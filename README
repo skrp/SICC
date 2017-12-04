@@ -7,26 +7,27 @@
      All files recursively
      
 2_Standard_Block.sh 	
-     Pool Wide Compression
+     Shreds file into same-sized blocks
+     Obfuscates & compresses pool
      
 3_Random_Block.c
-     Externals Drive
-     Obfuscate & Fill
-     
+     Shreds file into random-sized blocks
+     Ofuscates & secures pool
+3_multiSLICR.c
+     feed a file list to process as batch
+
 4_Rebuild_Blocks.sh
-     Use SICC_QUI
-     To make public gibberish
-     Into private information
+     Use key file to build file
+     
+~To make public gibberish
+~Into private information
 
 
 # LOCATIONS
-$target/ = files will be shredded into 1M blocks
-$dump/ = working directory
-$dump/pool/ = final location 
-$dump/limbo/ = temporary location for split
-$dump/QUI/ = ordered file pieces
-$dump/out/ = recompiled files
-
+$target_path = files to be shred
+$dump_path = final location
+$key_path = key location
+$key_path/tmp = temporary verification-file
 
 -----------------------------------------------------------------------
 
