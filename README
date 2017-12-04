@@ -14,7 +14,7 @@
      Shreds file into random-sized blocks
      Ofuscates & secures pool
 3_multiSLICR.c
-     feed a file list to process as batch
+     Feed a file list to process as batch
 
 4_Rebuild_Blocks.sh
      Use key file to build file
