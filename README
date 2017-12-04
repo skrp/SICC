@@ -6,15 +6,17 @@ System In Complete Chaos: encryptionless security thru obfuscation
 
 # INPUT ##########################
 file{[data][meta]}
+
 # OUPUT ##########################
 file{[meta]}
 file{[key]}
 file{[data]} file{[data]} file{[data]} file{[data]} ...
 
-Three access partitions
-  metadata - to know the contents of the data
-  key - know the sequence to build a file
-  data - unassociated file block in a sea
+# OBFUSCATION ####################
+Three requirements for file access
+  [b] metadata - to know the contents of the data
+  [b] key      - know the sequence to build a file
+  [b] data     - unassociated file block in a sea
 
 # CODE ###########################
 1_Xtract_Standardize.sh 	
