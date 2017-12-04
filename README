@@ -22,6 +22,7 @@ Three requirements for file access
 1_Xtract_Standardize.sh 	
      Grab, Standardize, Dedupe
      All files recursively
+     Isolate data from metadata
      
 2_Standard_Block.sh 	
      Shreds file into same-sized blocks
