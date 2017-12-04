@@ -11,8 +11,12 @@ file{[meta]}
 file{[key]}
 file{[data]} file{[data]} file{[data]} file{[data]} ...
 
-##################################
+Three access partitions
+  metadata - to know the contents of the data
+  key - know the sequence to build a file
+  data - unassociated file block in a sea
 
+# CODE ###########################
 1_Xtract_Standardize.sh 	
      Grab, Standardize, Dedupe
      All files recursively
@@ -33,8 +37,7 @@ file{[data]} file{[data]} file{[data]} file{[data]} ...
 ~To make public gibberish
 ~Into private information
 
-
-# LOCATIONS
+# LOCATIONS ######################
 $target_path = files to be shred
 $dump_path = final location
 $key_path = key location
