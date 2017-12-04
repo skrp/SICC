@@ -12,11 +12,12 @@
 // GLOBAL
 #define SHALEN 66
 #define SIZE 1000000 // 1B -> 1MB
+#define MAX 10000 // list
 // USAGE
 static void usage()
   { printf("usage: SLICR target_list target_path dump_path key_path\n"); exit(1); }
-int build(char *f_block, char *v_file);
 int slicr(char *target_file, char *dump_path, char *key_path);
+int build(char *f_block, char *v_file);
 int main(int argc, char *argv[])
 {
 // ARG CHK
@@ -53,9 +54,13 @@ int main(int argc, char *argv[])
 
 // BEGIN ##############################
   FILE *lfp;
-  char *list_line;
-  char list[10000]
-  int i = 0, ttl = 0;
+  char *list_line[SHALEN];
+
+  typedef struct list
+    { char line[SHALEN]; struct list *next; } list_t;
+
+  list_t *l = NULL
+  l = malloc(sizeof(list_t));
 
   if ((lfp = fopen(target_list, "rb")) < 0)
     { printf("FAIL fopen(fp) at: %s\n", target_list); }
@@ -64,19 +69,20 @@ int main(int argc, char *argv[])
   {
     if (list_line[strlen(list_line) - 1] == '\n')
       { list_line[strlen(list_line) - 1] = '\0'; }
-    list[i]=list_line;
-    i++;
+    l->line = list_line;
+    l->next = NULL;
+    l = l->next;
   }
-  ttl = i;
 
   fclose(lfp);
   free(target_list);
 
-  for (i = 0; i < ttl; i++)
+  while (l != NULL)
   {
     target_file = malloc(strlen(target_path + SHALEN));
     strcopy(target_file, target_path);
-    strcat(target_file, list_line);
+    strcat(target_file, l->line);
+    l = l->next;
 // ACTION
     slicr(target_file, dump_path, key_path);
 //  cleanup
@@ -120,9 +126,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
     uint32_t size, read_size;
     char *buf, *b_sha, *ff_block;
 // block SIZE
-
     size = arc4random_uniform((uint32_t) SIZE);
-
     if (size == 0)
       { continue; }
 
