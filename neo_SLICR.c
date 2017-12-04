@@ -9,7 +9,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define SHALEN 65
 #define SIZE 1000000 // 1B -> 1MB
 // USAGE
 static void usage()
