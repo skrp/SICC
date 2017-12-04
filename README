@@ -14,7 +14,7 @@ file{[data]} file{[data]} file{[data]} file{[data]} ...
 
 # OBFUSCATION ####################
 Three requirements for file access
-  [b] metadata - to know the contents of the data
+  [b] metadata - contents of the data
   [b] key      - know the sequence to build a file
   [b] data     - unassociated file block in a sea
 
