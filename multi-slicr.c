@@ -14,7 +14,7 @@
 #define SIZE 1000000 // 1B -> 1MB
 // USAGE
 static void usage()
-  { printf("usage: SLICR target_file dump_path key_path\n"); exit(1); }
+  { printf("usage: SLICR target_list target_path dump_path key_path\n"); exit(1); }
 int build(char *f_block, char *v_file);
 int slicr(char *target_file, char *dump_path, char *key_path);
 int main(int argc, char *argv[])
@@ -22,25 +22,29 @@ int main(int argc, char *argv[])
 {
 // ARG CHK
   struct stat st_dump;
+  char *target_list, *target_path, *dump_path, *key_path;
   
-  if (argc != 4)
+  if (argc != 5)
     { usage(); }
   
-  if (stat(argv[2], &st_dump) != 0)
-    { printf("FAIL dump_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
-    { printf("FAIL key_path %s", argv[3]); exit(1); }
+    { printf("FAIL dump_path %s", argv[3]); exit(1); }
+  if (stat(argv[4], &st_dump) != 0)
+    { printf("FAIL key_path %s", argv[4]); exit(1); }
  
 // SANITIZE
-  dump_path = malloc(strlen(argv[2] + 100));
-  strcpy(dump_path, argv[2]);
+  target_list = malloc(strlen(argv[1] + 100));
+  target_path = malloc(strlen(argv[2] + 100));
+  
+  dump_path = malloc(strlen(argv[3] + 100));
+  strcpy(dump_path, argv[4]);
   if (dump_path[strlen(dump_path) - 1] != '/')
     { strcat(dump_path, "/"); }
-  key_path = malloc(strlen(argv[3] + 100));
-  strcpy(key_path, argv[3]);
+  key_path = malloc(strlen(argv[4] + 100));
+  strcpy(key_path, argv[4]);
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
-
+  
 // SEED RAND
   srand((unsigned int) time(NULL));
 
@@ -188,11 +192,9 @@ int build(char *f_block, char *v_file)
 // read block-file
   if ((writ_size = fread(buf, 1, (size_t) b_size, bfp)) != b_size)
     { printf("FAIL write size mismatch b_size: %lu writ_size: %lu\n", b_size, writ_size); exit(1); }
-
 // write verification-file
   if ((fwrite(buf, 1, (size_t) b_size, vfp)) != b_size)
     { printf("FAIL write v_fp: %s \n", v_file); exit(1); }
-
 // cleanup
   fclose(vfp); fclose(bfp);
   free(buf);
