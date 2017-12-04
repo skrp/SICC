@@ -57,21 +57,29 @@ int main(int argc, char *argv[])
 // BEGIN ##############################
   FILE *lfp;
   char *list_line;
-
+  char list[10000]
+  int i = 0, ttl = 0;
+  
   if ((lfp = fopen(target_list, "rb")) < 0)
-    { printf("FAIL fopen(fp) at%s\n", target_list); }
+    { printf("FAIL fopen(fp) at: %s\n", target_list); }
 
   while(fgets(list_line, 66, lfp) != NULL)
-  {
+
+  { 
     if (list_line[strlen(list_line) - 1] == '\n')
       { list_line[strlen(list_line) - 1] = '\0'; }
-      
+    list[i]=list_line;
+    i++;
+  }
+  ttl = i;
+
+  for (i = 0; i < ttl; i++)
+  {
     target_file = malloc(strlen(target_path + 100));
     strcopy(target_file, target_path);
-    strcat(target_file, list_line);  
+    strcat(target_file, list_line);
 // ACTION
     slicr(target_file, dump_path, key_path);
-    
     free(target_file);
   }
 }
@@ -82,7 +90,6 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
   unsigned long long int f_size, position = 0;
 
-  char *key_path, *dump_path;
   char *f_sha, *v_sha;
   char *f_key, *v_file;
   char k_line[66];
