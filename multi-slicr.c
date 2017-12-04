@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
   
 }
 // BEGIN ##############################
-int slicr(int argc, char *argv[])
+int slicr(char *target_file, char *dump_path, char *key_path)
 {
 // DECLARE 
   FILE *fp, *kfp, *kkfp;
