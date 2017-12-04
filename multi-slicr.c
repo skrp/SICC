@@ -35,13 +35,18 @@ int main(int argc, char *argv[])
 // SANITIZE
   target_list = malloc(strlen(argv[1] + 100));
   target_path = malloc(strlen(argv[2] + 100));
-  
   dump_path = malloc(strlen(argv[3] + 100));
-  strcpy(dump_path, argv[4]);
+  key_path = malloc(strlen(argv[4] + 100));
+  
+  strcpy(target_list, argv[1]);
+  strcpy(target_path, argv[2]);
+  strcpy(dump_path, argv[3]);
+  strcpy(key_path, argv[4]);
+  
+  if (target_path[strlen(target_path) - 1] != '/')
+    { strcat(target_path, "/"); }  
   if (dump_path[strlen(dump_path) - 1] != '/')
     { strcat(dump_path, "/"); }
-  key_path = malloc(strlen(argv[4] + 100));
-  strcpy(key_path, argv[4]);
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
   
