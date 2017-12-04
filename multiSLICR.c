@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define SHALEN 66
+#define SHALEN 100 
 #define SIZE 1000000 // 1B -> 1MB
 #define MAX 10000 // list
 // USAGE
@@ -54,42 +54,26 @@ int main(int argc, char *argv[])
 
 // LIST ###############################
   FILE *lfp;
-  char *list_line[SHALEN];
-
-  typedef struct list
-    { char line[SHALEN]; struct list *next; } list_t;
-
-  list_t *list = NULL
-  list = malloc(sizeof(list_t));
-
+  char list_line[66];
+  
   if ((lfp = fopen(target_list, "rb")) < 0)
     { printf("FAIL fopen(fp) at: %s\n", target_list); }
 
-  while(fgets(list_line, SHALEN, lfp) != NULL)
+  while (fgets(list_line, 66, lfp) != NULL)
   {
     if (list_line[strlen(list_line) - 1] == '\n')
       { list_line[strlen(list_line) - 1] = '\0'; }
-    list->line = list_line;
-    list->next = NULL;
-    list = list->next;
-  }
 
-  fclose(lfp);
-  free(target_list);
 // WORK LIST ##########################
-  list_t *LIST = list;
-  while (LIST != NULL)
-  {
-    target_file = malloc(strlen(target_path + SHALEN));
-    strcopy(target_file, target_path);
-    strcat(target_file, LIST->line);
-    LIST = LIST->next;
+    target_file = malloc(strlen(target_path) + 66);
+    strcpy(target_file, target_path);
+    strcat(target_file, list_line);
 // ACTION
     slicr(target_file, dump_path, key_path);
 //  cleanup
     free(target_file);
   }
-  free(target_path); free(dump_path); free(key_path);
+  free(target_path); free(dump_path); free(key_path); free(target_list);
 }
 // slicr ##############################
 int slicr(char *target_file, char *dump_path, char *key_path)
@@ -101,7 +85,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
   char *f_sha, *v_sha;
   char *f_key, *v_file;
-  char k_line[SHALEN];
+  char k_line[66];
 
   size_t len;
 // TARGET FILE
@@ -113,7 +97,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   fseek(fp, 0, SEEK_SET);
   f_sha = SHA256_File(target_file, NULL);
 // KEY FILE
-  f_key = malloc(strlen(key_path + SHALEN));
+  f_key = malloc(strlen(key_path) + 100);
   strcpy(f_key, key_path);
   strcat(f_key, f_sha);
 
@@ -133,15 +117,14 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
     if (position + size >= f_size)
       { size = f_size - position; }
-
     if ((buf = malloc(size)) == NULL)
       { printf("FAIL memory buf pos: %llu\n", position); exit(1); }
 // write block
     if ((read_size = fread(buf, 1, (size_t) size, fp)) != size)
-      { printf("FAIL read mismatch size: %lu read_size: %lu\n", size, read_size); exit(1); }
+      { printf("FAIL read mismatch size: %u read_size: %u\n", size, read_size); exit(1); }
 // sha block
     b_sha = SHA256_FileChunk(target_file, NULL, (off_t) position, (off_t) size);
-    ff_block = malloc(strlen(dump_path + SHALEN));
+    ff_block = malloc(strlen(dump_path) + 66);
     strcpy(ff_block, dump_path);
     strcat(ff_block, b_sha);
 
@@ -163,7 +146,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   }
   fclose(kfp);
 // VERIFICATION BUILD #################
-  v_file = malloc(strlen(key_path + 10));
+  v_file = malloc(strlen(key_path) + 10);
   strcpy(v_file, key_path);
   strcat(v_file, "tmp");
 
@@ -172,12 +155,12 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
   unlink(v_file); // remove previous tmp-file
 // build verification-file
-  while(fgets(k_line, SHALEN, kkfp) != NULL)
+  while(fgets(k_line, 66, kkfp) != NULL)
   {
     if (k_line[strlen(k_line) - 1] =='\n')
       { k_line[strlen(k_line) - 1] = '\0'; }
 
-    char *fff_block = malloc(strlen(dump_path + SHALEN));
+    char *fff_block = malloc(strlen(dump_path) + 66);
     strcpy(fff_block, dump_path);
     strcat(fff_block, k_line);
 // FN
