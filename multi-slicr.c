@@ -18,7 +18,6 @@ static void usage()
 int build(char *f_block, char *v_file);
 int slicr(char *target_file, char *dump_path, char *key_path);
 int main(int argc, char *argv[])
-
 {
 // ARG CHK
   struct stat st_dump;
@@ -27,6 +26,8 @@ int main(int argc, char *argv[])
   if (argc != 5)
     { usage(); }
   
+  if (stat(argv[2], &st_dump) != 0)
+    { printf("FAIL target_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
     { printf("FAIL dump_path %s", argv[3]); exit(1); }
   if (stat(argv[4], &st_dump) != 0)
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
 
   strcpy(target_file, target_file_path);
   if ((lfp = fopen(target_file, "rb")) < 0) 
-    { printf("FAIL fopen(fp) at%s\n", argv[1]); }
+    { printf("FAIL fopen(fp) at%s\n", target_list); }
   
   while(fgets(list_line, 66, lfp) != NULL)
   {
@@ -140,7 +141,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
   fclose(kfp);
 // VERIFICATION BUILD &&&&&&&&&&&&&&&&&
-  v_file = malloc(strlen(argv[3] + 10));
+  v_file = malloc(strlen(key_path + 10));
   strcpy(v_file, key_path);
   strcat(v_file, "tmp"); 
 
@@ -154,7 +155,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
     if (k_line[strlen(k_line) - 1] =='\n')
       { k_line[strlen(k_line) - 1] = '\0'; }
 
-    char *fff_block = malloc(strlen(argv[2] + 100));
+    char *fff_block = malloc(strlen(dump_path + 100));
     strcpy(fff_block, dump_path);
     strcat(fff_block, k_line); 
 // FN 
