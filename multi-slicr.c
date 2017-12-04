@@ -46,17 +46,14 @@ int main(int argc, char *argv[])
 
 // BEGIN ##############################
   FILE *lfp;
-  char *list_line;
-  size_t len; 
- 
+  char *list_line, *target_file;
+
+  strcpy(target_file, target_file_path);
   if ((lfp = fopen(target_file, "rb")) < 0) 
     { printf("FAIL fopen(fp) at%s\n", argv[1]); }
   
-      //list_line/path
-  
   while(fgets(list_line, 66, lfp) != NULL)
   {
-
     slicr(target_file, dump_path, key_path);
     
 }
@@ -72,23 +69,22 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   char *f_key, *v_file;
   char k_line[66];
   
-
-
+  size_t len; 
 // TARGET FILE
-  if ((fp = fopen(argv[1], "rb")) < 0) 
-    { printf("FAIL fopen(fp) at%s\n", argv[1]); }
+  if ((fp = fopen(target_file, "rb")) < 0) 
+    { printf("FAIL fopen(fp) at%s\n", target_file); }
 
   fseek(fp, 0, SEEK_END);
   f_size = ftell(fp);
   fseek(fp, 0, SEEK_SET);
-  f_sha = SHA256_File(argv[1], NULL);
+  f_sha = SHA256_File(target_file, NULL);
 // KEY FILE
-  f_key = malloc(strlen(argv[3] + 100));
+  f_key = malloc(strlen(key_path + 100));
   strcpy(f_key, key_path);
   strcat(f_key, f_sha);
 
   if ((kfp = fopen(f_key, "wb")) < 0)
-    { printf("FAIL fopen(f_key) at: %s\n", argv[3]); exit(1); }
+    { printf("FAIL fopen(f_key) at: %s\n", key_path); exit(1); }
 // SLICE //////////////////////////////
   while (position < f_size)
   {
