@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
 // ARG CHK
   struct stat st_dump;
-  char *target_list, *target_path, *dump_path, *key_path;
+  char *target_list, *target_path, *dump_path, *key_path, *target_file;
 
   if (argc != 5)
     { usage(); }
@@ -56,16 +56,24 @@ int main(int argc, char *argv[])
 
 // BEGIN ##############################
   FILE *lfp;
-  char *list_line, *target_file;
+  char *list_line;
 
-  strcpy(target_file, target_file_path);
-  if ((lfp = fopen(target_file, "rb")) < 0)
+  if ((lfp = fopen(target_list, "rb")) < 0)
     { printf("FAIL fopen(fp) at%s\n", target_list); }
 
   while(fgets(list_line, 66, lfp) != NULL)
   {
+    if (list_line[strlen(list_line) - 1] == '\n')
+      { list_line[strlen(list_line) - 1] = '\0'; }
+      
+    target_file = malloc(strlen(target_path + 100));
+    strcopy(target_file, target_path);
+    strcat(target_file, list_line);  
+// ACTION
     slicr(target_file, dump_path, key_path);
-
+    
+    free(target_file);
+  }
 }
 int slicr(char *target_file, char *dump_path, char *key_path)
 {
