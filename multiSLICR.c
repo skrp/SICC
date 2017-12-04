@@ -1,5 +1,5 @@
 //#####################################
-// SLICR - shred file into random sizes
+// SLICR - shred file batches into random sizes
 // FreeBSD
 #include <stdio.h>
 #include <unistd.h>
