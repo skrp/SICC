@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define SHALEN 100
+#define SHALEN 66
 #define SIZE 1000000 // 1B -> 1MB
 #define MAX 10000 // list
 // USAGE
@@ -32,14 +32,14 @@ int main(int argc, char *argv[])
   key_path = malloc(strlen(argv[4] + SHALEN)); strcpy(key_path, argv[4]); if (key_path[strlen(key_path) - 1] != '/') { strcat(key_path, "/"); }
 // LIST ###############################
   FILE *lfp;
-  char list_line[66];
+  char list_line[SHALEN];
 
   if ((lfp = fopen(target_list, "rb")) < 0) { printf("FAIL fopen(fp) at: %s\n", target_list); }
-  while (fgets(list_line, 66, lfp) != NULL)
+  while (fgets(list_line, SHALEN, lfp) != NULL)
   {
     if (list_line[strlen(list_line) - 1] == '\n') { list_line[strlen(list_line) - 1] = '\0'; }
 // WORK LIST ##########################
-    target_file = malloc(strlen(target_path) + 66);
+    target_file = malloc(strlen(target_path) + SHALEN);
     strcpy(target_file, target_path);
     strcat(target_file, list_line);
 // ACTION
@@ -56,7 +56,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   FILE *fp, *kfp, *kkfp;
   unsigned long long int f_size, position = 0;
   char *f_sha, *v_sha; char *f_key, *v_file;
-  char k_line[66];
+  char k_line[SHALEN];
 // TARGET FILE
   if ((fp = fopen(target_file, "rb")) < 0) { printf("FAIL fopen(fp) at%s\n", target_file); }
 // FILE SIZE
@@ -86,7 +86,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
       { printf("FAIL read mismatch size: %u read_size: %u\n", size, read_size); exit(1); }
 // sha block
     b_sha = SHA256_FileChunk(target_file, NULL, (off_t) position, (off_t) size);
-    ff_block = malloc(strlen(dump_path) + 66); strcpy(ff_block, dump_path); strcat(ff_block, b_sha);
+    ff_block = malloc(strlen(dump_path) + SHALEN); strcpy(ff_block, dump_path); strcat(ff_block, b_sha);
 
     if ((bbfp = fopen(ff_block, "wb")) < 0) { printf("FAIL ff_block open pos: %llu\n", position); exit(1); }
 
@@ -107,13 +107,9 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 
 void arg_chk()
 {
-  if (argc != 5)
-    { usage(); }
+  if (argc != 5) { usage(); }
 
-  if (stat(argv[2], &st_dump) != 0)
-    { printf("FAIL target_path %s", argv[2]); exit(1); }
-  if (stat(argv[3], &st_dump) != 0)
-    { printf("FAIL dump_path %s", argv[3]); exit(1); }
-  if (stat(argv[4], &st_dump) != 0)
-    { printf("FAIL key_path %s", argv[4]); exit(1); }
+  if (stat(argv[2], &st_dump) != 0) { printf("FAIL target_path %s", argv[2]); exit(1); }
+  if (stat(argv[3], &st_dump) != 0) { printf("FAIL dump_path %s", argv[3]); exit(1); }
+  if (stat(argv[4], &st_dump) != 0) { printf("FAIL key_path %s", argv[4]); exit(1); }
 }
