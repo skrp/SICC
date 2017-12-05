@@ -69,30 +69,30 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   strcpy(f_key, key_path);
   strcat(f_key, f_sha);
   if ((kfp = fopen(f_key, "wb")) < 0) { printf("FAIL fopen(f_key) at: %s\n", key_path); exit(1); }
-// SLICE //////////////////////////////
+
   while (position < f_size)
   {
-// DECLARE
+// SLICE //////////////////////////////
     FILE *bbfp;
     uint32_t size, read_size;
     char *buf, *b_sha, *ff_block;
-// block SIZE
+
     size = arc4random((uint32_t) SIZE); if (size == 0) { continue; }
 
     if (position + size >= f_size) { size = f_size - position; }
 
     if ((buf = malloc(size)) == NULL) { printf("FAIL memory buf pos: %llu\n", position); exit(1); }
-// write block
-    if ((read_size = fread(buf, 1, (size_t) size, fp)) != size)
-      { printf("FAIL read mismatch size: %u read_size: %u\n", size, read_size); exit(1); }
-// sha block
+
+    if ((read_size = fread(buf, 1, (size_t) size, fp)) != size) { printf("FAIL read mismatch size: %u read_size: %u\n", size, read_size); exit(1); }
+
     b_sha = SHA256_FileChunk(target_file, NULL, (off_t) position, (off_t) size);
+
     ff_block = malloc(strlen(dump_path) + SHALEN); strcpy(ff_block, dump_path); strcat(ff_block, b_sha);
 
     if ((bbfp = fopen(ff_block, "wb")) < 0) { printf("FAIL ff_block open pos: %llu\n", position); exit(1); }
 
     if ((fwrite(buf, 1, (size_t) size, bbfp)) != size) { printf("FAIL write block: %llu \n", position); exit(1); }
-// write key
+
     fwrite(b_sha, 1, 64, kfp); fwrite("\n", 1, 1, kfp);
 
     position += size;
