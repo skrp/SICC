@@ -14,7 +14,7 @@
 // USAGE
 static void usage()
   { printf("usage: BLKR key_list key_path block_path dump_path\n"); exit(1); }
-int build(char *f_block, char *v_file);
+int build(char *target_file, char *block_path, char *dump_path);
 int main(int argc, char *argv[])
 {
 // ARG CHK
