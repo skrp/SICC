@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
   FILE *lfp;
   char list_line[66];
   
-  if ((lfp = fopen(target_list, "rb")) < 0)
-    { printf("FAIL fopen(fp) at: %s\n", target_list); }
+  if ((lfp = fopen(key_list, "rb")) < 0)
+    { printf("FAIL fopen(fp) at: %s\n", key_list); }
 
   while (fgets(list_line, 66, lfp) != NULL)
   {
@@ -63,14 +63,14 @@ int main(int argc, char *argv[])
 
 // WORK LIST ##########################
     target_file = malloc(strlen(target_path) + 66);
-    strcpy(target_file, target_path);
+    strcpy(target_file, key_path);
     strcat(target_file, list_line);
 // ACTION
-    slicr(target_file, dump_path, key_path);
+    slicr(target_file, block_path, dump_path);
 //  cleanup
     free(target_file);
   }
-  free(target_path); free(dump_path); free(key_path); free(target_list);
+  free(target_path); free(key_path); free(block_path); free(dump_path); free(target_list);
 }
 
 int build(char *f_block, char *v_file)
