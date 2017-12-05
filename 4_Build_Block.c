@@ -42,12 +42,12 @@ int main(int argc, char *argv[])
   strcpy(block_path, argv[3]);
   strcpy(dump_path, argv[4]);
 
-  if (target_path[strlen(target_path) - 1] != '/')
-    { strcat(target_path, "/"); }
-  if (dump_path[strlen(dump_path) - 1] != '/')
-    { strcat(dump_path, "/"); }
-  if (key_path[strlen(key_path) - 1] != '/')
+  if (target_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
+  if (dump_path[strlen(block_path) - 1] != '/')
+    { strcat(block_path, "/"); }
+  if (key_path[strlen(dump_path) - 1] != '/')
+    { strcat(dump_path, "/"); }
 
 // LIST ###############################
   FILE *lfp;
