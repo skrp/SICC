@@ -1,7 +1,8 @@
+///////////////////////////////////////////
+// BUILD - take a batch of key-files to build from a block-pool
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
 #include <sha256.h>
 #include <sys/stat.h>
@@ -12,35 +13,34 @@
 #define MAX 10000 // list
 // USAGE
 static void usage()
-  { printf("usage: SLICR target_list target_path dump_path key_path\n"); exit(1); }
-int slicr(char *target_file, char *dump_path, char *key_path);
+  { printf("usage: BLKR key_list key_path block_path dump_path\n"); exit(1); }
 int build(char *f_block, char *v_file);
 int main(int argc, char *argv[])
 {
 // ARG CHK
   struct stat st_dump;
-  char *target_list, *target_path, *dump_path, *key_path, *target_file;
+  char *target_list, *key_path, *block_path, *dump_path, *target_file;
 
   if (argc != 5)
     { usage(); }
 
   if (stat(argv[2], &st_dump) != 0)
-    { printf("FAIL target_path %s", argv[2]); exit(1); }
+    { printf("FAIL key_path %s", argv[2]); exit(1); }
   if (stat(argv[3], &st_dump) != 0)
-    { printf("FAIL dump_path %s", argv[3]); exit(1); }
+    { printf("FAIL block_path %s", argv[3]); exit(1); }
   if (stat(argv[4], &st_dump) != 0)
-    { printf("FAIL key_path %s", argv[4]); exit(1); }
+    { printf("FAIL dump_path %s", argv[4]); exit(1); }
 
 // SANITIZE
-  target_list = malloc(strlen(argv[1] + SHALEN));
-  target_path = malloc(strlen(argv[2] + SHALEN));
-  dump_path = malloc(strlen(argv[3] + SHALEN));
-  key_path = malloc(strlen(argv[4] + SHALEN));
+  key_list = malloc(strlen(argv[1] + SHALEN));
+  key_path = malloc(strlen(argv[2] + SHALEN));
+  block_path = malloc(strlen(argv[3] + SHALEN));
+  dump_path = malloc(strlen(argv[4] + SHALEN));
 
-  strcpy(target_list, argv[1]);
-  strcpy(target_path, argv[2]);
-  strcpy(dump_path, argv[3]);
-  strcpy(key_path, argv[4]);
+  strcpy(key_list, argv[1]);
+  strcpy(key_path, argv[2]);
+  strcpy(block_path, argv[3]);
+  strcpy(dump_path, argv[4]);
 
   if (target_path[strlen(target_path) - 1] != '/')
     { strcat(target_path, "/"); }
