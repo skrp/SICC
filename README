@@ -34,10 +34,10 @@ Three requirements for file access
 3_multiSLICR.c
      Feed a file list to process as batch
 3_MS.c
-     Shred without check
+     Shred files without cost of verification
 
-4_Rebuild_Blocks.sh
-     Use key file to build file
+4_Build_Blocks.c
+     Use key file to build the original file from blocks
      
 ~To make public gibberish
 ~Into private information
