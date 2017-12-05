@@ -1,5 +1,7 @@
 //#####################################
-// SLICR - shred file batches into random sizes
+// MS - mulitSLICR - shred file into randome parts without verification cost
+//                 - the file can be verified later over time, audits over over-resource-consumption
+//                 - this code will be acceptable until an error is found
 // FreeBSD
 #include <stdio.h>
 #include <unistd.h>
