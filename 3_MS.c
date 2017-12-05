@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 // GLOBAL
-#define SHALEN 100 
+#define SHALEN 100
 #define SIZE 1000000 // 1B -> 1MB
 #define MAX 10000 // list
 // USAGE
@@ -22,42 +22,18 @@ int slicr(char *target_file, char *dump_path, char *key_path);
 int build(char *f_block, char *v_file);
 int main(int argc, char *argv[])
 {
-// ARG CHK
   struct stat st_dump;
   char *target_list, *target_path, *dump_path, *key_path, *target_file;
-
-  if (argc != 5)
-    { usage(); }
-
-  if (stat(argv[2], &st_dump) != 0)
-    { printf("FAIL target_path %s", argv[2]); exit(1); }
-  if (stat(argv[3], &st_dump) != 0)
-    { printf("FAIL dump_path %s", argv[3]); exit(1); }
-  if (stat(argv[4], &st_dump) != 0)
-    { printf("FAIL key_path %s", argv[4]); exit(1); }
-
-// SANITIZE
-  target_list = malloc(strlen(argv[1] + SHALEN));
-  target_path = malloc(strlen(argv[2] + SHALEN));
-  dump_path = malloc(strlen(argv[3] + SHALEN));
-  key_path = malloc(strlen(argv[4] + SHALEN));
-
-  strcpy(target_list, argv[1]);
-  strcpy(target_path, argv[2]);
-  strcpy(dump_path, argv[3]);
-  strcpy(key_path, argv[4]);
-
-  if (target_path[strlen(target_path) - 1] != '/')
-    { strcat(target_path, "/"); }
-  if (dump_path[strlen(dump_path) - 1] != '/')
-    { strcat(dump_path, "/"); }
-  if (key_path[strlen(key_path) - 1] != '/')
-    { strcat(key_path, "/"); }
+  arg_chk();
+  target_list = malloc(strlen(argv[1] + SHALEN)); strcpy(target_list, argv[1]);
+  target_path = malloc(strlen(argv[2] + SHALEN)); strcpy(target_path, argv[2]); if (target_path[strlen(target_path) - 1] != '/') { strcat(target_path, "/"); }
+  dump_path = malloc(strlen(argv[3] + SHALEN)); strcpy(dump_path, argv[3]); if (dump_path[strlen(dump_path) - 1] != '/') { strcat(dump_path, "/"); }
+  key_path = malloc(strlen(argv[4] + SHALEN)); strcpy(key_path, argv[4]); if (key_path[strlen(key_path) - 1] != '/') { strcat(key_path, "/"); }
 
 // LIST ###############################
   FILE *lfp;
   char list_line[66];
-  
+
   if ((lfp = fopen(target_list, "rb")) < 0)
     { printf("FAIL fopen(fp) at: %s\n", target_list); }
 
@@ -82,21 +58,16 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 {
 // DECLARE
   FILE *fp, *kfp, *kkfp;
-
   unsigned long long int f_size, position = 0;
-
-  char *f_sha, *v_sha;
-  char *f_key, *v_file;
+  char *f_sha, *v_sha; char *f_key, *v_file;
   char k_line[66];
-
-  size_t len;
+  
 // TARGET FILE
   if ((fp = fopen(target_file, "rb")) < 0)
     { printf("FAIL fopen(fp) at%s\n", target_file); }
-
-  fseek(fp, 0, SEEK_END);
-  f_size = ftell(fp);
-  fseek(fp, 0, SEEK_SET);
+// FILE SIZE
+  fseek(fp, 0, SEEK_END); f_size = ftell(fp); fseek(fp, 0, SEEK_SET);
+// SHA
   f_sha = SHA256_File(target_file, NULL);
 // KEY FILE
   f_key = malloc(strlen(key_path) + 100);
@@ -138,7 +109,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 // write key
     fwrite(b_sha, 1, 64, kfp);
     fwrite("\n", 1, 1, kfp);
-    
+
     position += size;
 ///////////////////////////////////////
 // cleanup
@@ -148,4 +119,17 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   fclose(fp); fclose(kfp);
   free(f_key); free(f_sha);
   return 0;
+}
+
+void arg_chk()
+{
+  if (argc != 5)
+    { usage(); }
+
+  if (stat(argv[2], &st_dump) != 0)
+    { printf("FAIL target_path %s", argv[2]); exit(1); }
+  if (stat(argv[3], &st_dump) != 0)
+    { printf("FAIL dump_path %s", argv[3]); exit(1); }
+  if (stat(argv[4], &st_dump) != 0)
+    { printf("FAIL key_path %s", argv[4]); exit(1); }
 }
