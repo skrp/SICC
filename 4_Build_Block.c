@@ -66,7 +66,8 @@ int main(int argc, char *argv[])
     strcpy(target_file, key_path);
     strcat(target_file, list_line);
 // ACTION
-    build(target_file, block_path, dump_path);
+    if ((build(target_file, block_path, dump_path)) < 0)
+      { printf("FAIL build target: %s block: %s dump: %s\n", target_file, block_path, dump_path); }
 //  cleanup
     free(target_file);
   }
