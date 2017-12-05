@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     uint32_t size, read_size;
     char *buf, *b_sha, *ff_block;
 // block SIZE 
-    size = arc4random_uniform((uint32_t) SIZE);
+    size = arc4random((uint32_t) SIZE);
     if (size == 0)
       { continue; }
 
