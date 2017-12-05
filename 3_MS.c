@@ -15,11 +15,12 @@
 #define SHALEN 66
 #define SIZE 1000000 // 1B -> 1MB
 #define MAX 10000 // list
-// USAGE
-static void usage()
-  { printf("usage: SLICR target_list target_path dump_path key_path\n"); exit(1); }
+
+static void usage() { printf("usage: SLICR target_list target_path dump_path key_path\n"); exit(1); }
+
 int slicr(char *target_file, char *dump_path, char *key_path);
 int build(char *f_block, char *v_file);
+
 int main(int argc, char *argv[])
 {
   struct stat st_dump;
@@ -104,7 +105,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   free(f_key); free(f_sha);
   return 0;
 }
-
+// arg_chk ############################
 void arg_chk()
 {
   if (argc != 5) { usage(); }
