@@ -66,19 +66,23 @@ int main(int argc, char *argv[])
     strcpy(target_file, key_path);
     strcat(target_file, list_line);
 // ACTION
-    slicr(target_file, block_path, dump_path);
+    build(target_file, block_path, dump_path);
 //  cleanup
     free(target_file);
   }
   free(target_path); free(key_path); free(block_path); free(dump_path); free(target_list);
 }
 
-int build(char *f_block, char *v_file)
+int build(char *target_file, char *block_path, char *dump_path)
 {
   FILE *vfp, *bfp;
   unsigned long int b_size, writ_size;
-  char *buf;
+  char *buf, *v_file;
 // verification file
+  v_file = malloc(strlen(dump_path + SHALEN));
+  strcpy(v_file, dump_path);
+  strcat(vfile, "tmp");
+    
   if ((vfp = fopen(v_file, "ab")) < 0)
     { printf("FAIL fopen(v_file) at: %s\n",v_file); exit(1); }
 // block file
