@@ -136,20 +136,14 @@ int slicr(char *target_file, char *dump_path, char *key_path)
 // write key
     fwrite(b_sha, 1, 64, kfp);
     fwrite("\n", 1, 1, kfp);
-
-   // printf("%s %s %llu\n", f_key, b_sha, position);
+    
     position += size;
 ///////////////////////////////////////
 // cleanup
     free(buf); free(b_sha); free(ff_block);
     fclose(bbfp);
   }
-  fclose(kfp);
-  }
-// cleanup
-  fclose(fp);
-  free(f_key);
-  free(f_sha);
+  fclose(fp); fclose(kfp);
+  free(f_key); free(f_sha);
   return 0;
 }
-// build ##############################
