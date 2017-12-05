@@ -25,23 +25,19 @@ int main(int argc, char *argv[])
   struct stat st_dump;
   char *target_list, *target_path, *dump_path, *key_path, *target_file;
   arg_chk();
+
   target_list = malloc(strlen(argv[1] + SHALEN)); strcpy(target_list, argv[1]);
   target_path = malloc(strlen(argv[2] + SHALEN)); strcpy(target_path, argv[2]); if (target_path[strlen(target_path) - 1] != '/') { strcat(target_path, "/"); }
   dump_path = malloc(strlen(argv[3] + SHALEN)); strcpy(dump_path, argv[3]); if (dump_path[strlen(dump_path) - 1] != '/') { strcat(dump_path, "/"); }
   key_path = malloc(strlen(argv[4] + SHALEN)); strcpy(key_path, argv[4]); if (key_path[strlen(key_path) - 1] != '/') { strcat(key_path, "/"); }
-
 // LIST ###############################
   FILE *lfp;
   char list_line[66];
 
-  if ((lfp = fopen(target_list, "rb")) < 0)
-    { printf("FAIL fopen(fp) at: %s\n", target_list); }
-
+  if ((lfp = fopen(target_list, "rb")) < 0) { printf("FAIL fopen(fp) at: %s\n", target_list); }
   while (fgets(list_line, 66, lfp) != NULL)
   {
-    if (list_line[strlen(list_line) - 1] == '\n')
-      { list_line[strlen(list_line) - 1] = '\0'; }
-
+    if (list_line[strlen(list_line) - 1] == '\n') { list_line[strlen(list_line) - 1] = '\0'; }
 // WORK LIST ##########################
     target_file = malloc(strlen(target_path) + 66);
     strcpy(target_file, target_path);
@@ -61,7 +57,7 @@ int slicr(char *target_file, char *dump_path, char *key_path)
   unsigned long long int f_size, position = 0;
   char *f_sha, *v_sha; char *f_key, *v_file;
   char k_line[66];
-  
+
 // TARGET FILE
   if ((fp = fopen(target_file, "rb")) < 0)
     { printf("FAIL fopen(fp) at%s\n", target_file); }
