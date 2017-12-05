@@ -33,6 +33,8 @@ Three requirements for file access
      Ofuscates & secures pool
 3_multiSLICR.c
      Feed a file list to process as batch
+3_MS.c
+     Shred without check
 
 4_Rebuild_Blocks.sh
      Use key file to build file
