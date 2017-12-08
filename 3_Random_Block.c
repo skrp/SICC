@@ -1,6 +1,9 @@
 //#####################################
 // SLICR - shred file into random-sized blocks
-// FreeBSD
+//       - verify the file afterword is costly
+//       - run this to check new system only
+//
+// FreeBSD-kernel-only
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
