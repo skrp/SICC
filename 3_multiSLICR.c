@@ -11,7 +11,9 @@
 #include <sys/types.h>
 // GLOBAL
 #define SHALEN 100 
-#define SIZE 1000000 // 1B -> 1MB
+#define SIZE 1000000 // BLOCK MAX = 1MB
+#define SIZE 100000 // BLOCK MAX = 100KB
+#define SIZE 1000000 // BLOCK MAX = KB
 #define MAX 10000 // list
 // USAGE
 static void usage()
@@ -35,10 +37,10 @@ int main(int argc, char *argv[])
     { printf("FAIL key_path %s", argv[4]); exit(1); }
 
 // SANITIZE
-  target_list = malloc(strlen(argv[1] + SHALEN));
-  target_path = malloc(strlen(argv[2] + SHALEN));
-  dump_path = malloc(strlen(argv[3] + SHALEN));
-  key_path = malloc(strlen(argv[4] + SHALEN));
+  target_list = malloc(strlen(argv[1]) + SHALEN);
+  target_path = malloc(strlen(argv[2]) + SHALEN);
+  dump_path = malloc(strlen(argv[3]) + SHALEN);
+  key_path = malloc(strlen(argv[4]) + SHALEN);
 
   strcpy(target_list, argv[1]);
   strcpy(target_path, argv[2]);
