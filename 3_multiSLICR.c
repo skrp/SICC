@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 {
 // ARG CHK
   struct stat st_dump;
+  int cnt;
   char *target_list, *target_path, *dump_path, *key_path, *target_file;
 
   if (argc != 5)
