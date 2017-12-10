@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
     strcat(target_file, list_line);
 // ACTION
     slicr(target_file, dump_path, key_path);
+    printf("%d ", cnt); cnt++;
 //  cleanup
     free(target_file);
   }
