@@ -43,13 +43,13 @@ int main(int argc, char *argv[])
   
   size_t len; 
 // SANITIZE
-  dump_path = malloc(strlen(argv[2] + 100));
+  dump_path = malloc(strlen(argv[2]) + 100);
   strcpy(dump_path, argv[2]);
   if (dump_path[strlen(dump_path) - 1] != '/')
     { strcat(dump_path, "/"); }
 
-  key_path = malloc(strlen(argv[3] + 100));
-  strcpy(key_path, argv[3]);
+  key_path = malloc(strlen(argv[3] + 100);
+  strcpy(key_path, argv[3]);)
   if (key_path[strlen(key_path) - 1] != '/')
     { strcat(key_path, "/"); }
 // TARGET FILE
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   fseek(fp, 0, SEEK_SET);
   f_sha = SHA256_File(argv[1], NULL);
 // KEY FILE
-  f_key = malloc(strlen(argv[3] + 100));
+  f_key = malloc(strlen(argv[3]) + 100);
   strcpy(f_key, key_path);
   strcat(f_key, f_sha);
 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
       { printf("FAIL read mismatch size: %u read_size: %u\n", size, read_size); exit(1); }
 // sha block
     b_sha = SHA256_FileChunk(argv[1], NULL, (off_t) position, (off_t) size);
-    ff_block = malloc(strlen(argv[2] + 100));
+    ff_block = malloc(strlen(argv[2]) + 100);
     strcpy(ff_block, dump_path);
     strcat(ff_block, b_sha);
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
   fclose(kfp);
 // VERIFICATION BUILD &&&&&&&&&&&&&&&&&
-  v_file = malloc(strlen(argv[3] + 10));
+  v_file = malloc(strlen(argv[3]) + 10);
   strcpy(v_file, key_path);
   strcat(v_file, "tmp"); 
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     if (k_line[strlen(k_line) - 1] =='\n')
       { k_line[strlen(k_line) - 1] = '\0'; }
 
-    char *fff_block = malloc(strlen(argv[2] + 100));
+    char *fff_block = malloc(strlen(argv[2]) + 100);
     strcpy(fff_block, dump_path);
     strcat(fff_block, k_line); 
 // FN 
