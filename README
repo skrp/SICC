@@ -4,6 +4,12 @@
 
 System In Complete Chaos: encryptionless security thru obfuscation
 
+# OBFUSCATION ####################
+Three requirements for file access
+  [b] metadata - content-information of a file
+  [b] key      - know the sequence to build a file
+  [b] data     - unassociated file block in a sea
+
 # INPUT ##########################
 file{[data][meta]}
 
@@ -11,12 +17,6 @@ file{[data][meta]}
 file{[meta]}
 file{[key]}
 file{[data]} file{[data]} file{[data]} file{[data]} ...
-
-# OBFUSCATION ####################
-Three requirements for file access
-  [b] metadata - content-information of a file
-  [b] key      - know the sequence to build a file
-  [b] data     - unassociated file block in a sea
 
 # CODE ###########################
 1_Xtract_Standardize.sh 	
